@@ -1,0 +1,21 @@
+Notities en zo:
+
+VEHICLES: kenteken, merk, model, kilometerstand, laatste onderhoud (datum?), in use?, laatste locatie
+TRIPS: begin datumtijd, eind datumtijd, beginlocatie, eindlocatie, beginkilometerstand, eindkilometerstand, voertuig, bestuurder
+REFUELS: datumtijd, locatie?, hoeveelheid brandstof, totaalprijs, voertuig, bestuurder
+DRIVER: personalia
+
+DINGEN DIE ONS SYSTEEM MOET KUNNEN DOEN:
+X nieuwe bestuurder, nieuw voertuig
+X log een rit
+lees bestuurder, lees voertuig, lees ritten
+hoeveel auto heeft gereden in laatste zoveel tijd
+hoeveel auto heeft gereden sinds laatste onderhoud
+afstand gereden in rit
+hoeveel uren/kilometers bestuurders heeft gereden
+auto: laatste x bestuurders
+auto: verschil eind- en begin
+bestuurder: laatste x auto's
+opvragen wat de afstand van een route zou moeten zijn
+ongelogde afstand gereden in een auto in een tijdsperiode
+en honderdduizend dingen die we vast vergeten zijn...
