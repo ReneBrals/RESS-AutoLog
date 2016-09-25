@@ -1,0 +1,7 @@
+<h1>Register driver</h1>
+<form action="{% url 'submit_register_driver' %}" method="post"> {% csrf_token %}
+
+<h4>Personal information</h4>
+Name: <input type="text" name="name"> <br />
+<input type="submit" value="Register" />
+</form>

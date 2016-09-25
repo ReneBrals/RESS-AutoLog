@@ -1,0 +1,10 @@
+<h1>Register vehicle</h1>
+<form action="{% url 'submit_register_vehicle' %}" method="post">{% csrf_token %}
+
+License plate: <input type="text" name="license_plate"> <br />
+Build year: <input type="text" name="build_year"> <br />
+Make: <input type="text" name="make"> <br />
+Model: <input type="text" name="model"> <br />
+Mileage: <input type="number" name="mileage"> <input type="radio" name="mileage_unit" id="mu1" value="km"/> km <input type="radio" name="mileage_unit" id="mu1" value="mi"/> mi <br />
+<input type="submit" value="Register" />
+</form>

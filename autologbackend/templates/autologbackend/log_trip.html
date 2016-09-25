@@ -1,0 +1,24 @@
+<h1>Log trip</h1>
+
+<form action="{% url 'submit_log_trip' %}" method="post">
+{% csrf_token %}
+<h4>Vehicle</h4>
+{% for veh in vehicles %}
+<input type="radio" name="vehicle" id="vehicle{{ forloop.counter }}" value="{{ veh.id }}"/>
+<label for="vehicle{{ forloop.counter }}">{{ veh.license_plate }} - {{ veh.build_year }} {{ veh.vehicle_make }} {{ veh.vehicle_model }} </label><br/>
+{% endfor %}
+<h4>Drivers</h4>
+{% for dri in drivers %}
+<input type="radio" name="driver" id="driver{{ forloop.counter }}" value="{{ dri.id }}"/>
+<label for="driver{{ forloop.counter }}">{{ dri.name }} </label><br/>
+{% endfor %}
+<h4>Location and time</h4>
+Departure time: <input type="date" name ="departure_date"><input type="time" name ="departure_time"><br/>
+Departure location: <input type="text" name="departure_location">
+Departure mileage: <input type="number" name="departure_mileage"><br/>
+
+Arrival time: <input type="date" name ="arrival_date"><input type="time" name ="arrival_time"><br/>
+Arrival location: <input type="text" name="arrival_location">
+Arrival mileage: <input type="number" name="arrival_mileage"><br/>
+<input type="submit" value="Log" />
+</form>
