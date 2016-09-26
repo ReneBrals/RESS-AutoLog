@@ -3,14 +3,14 @@ from django.urls import reverse
 from django.utils.dateparse import *
 from django.shortcuts import render
 from django.template import RequestContext
-
+from django.db.models import F
 from django.template import loader
 
 from .models import Vehicle, Driver, Trip
 
 # Create your views here.
 def index(request):
-	latest_trips_list = Trip.objects.order_by('-arrival_time')[:15]
+	latest_trips_list = Trip.objects.order_by('-arrival_time').annotate(distance=F('arrival_mileage')-F('departure_mileage'))[:15]
 	vehicles = Vehicle.objects.order_by('license_plate')
 
 	template = loader.get_template('autologbackend/index.html')
@@ -23,7 +23,7 @@ def index(request):
 
 def vehicle_detail(request,vehicle_id):
 	vehicle = Vehicle.objects.get(pk=vehicle_id)
-	latest_vehicle_trips = Trip.objects.filter(vehicle=vehicle).order_by('-arrival_time')[:15]
+	latest_vehicle_trips = Trip.objects.filter(vehicle=vehicle).order_by('-arrival_time').annotate(distance=F('arrival_mileage')-F('departure_mileage'))[:15]
 
 	last_trip = latest_vehicle_trips[0]
 

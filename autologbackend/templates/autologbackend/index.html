@@ -12,6 +12,7 @@
     		<th>Driver</th> 
     		<th>From</th>
     		<th>To</th>
+            <th>Distance</th>
     		<th>Mileage arr.</th>
     		<th>Mileage dep.</th>
   		</tr>
@@ -23,6 +24,7 @@
     	<td>{{ trip.driver.name }}</td>
     	<td>{{ trip.departure_location }} - {{ trip.departure_time }}</td>
     	<td>{{ trip.arrival_location }} - {{ trip.arrival_time }}</td>
+        <td>{{ trip.distance }}</td>
     	<td>{{ trip.departure_mileage }}</td>
     	<td>{{ trip.arrival_mileage }}</td>
 
