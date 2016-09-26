@@ -1,3 +1,5 @@
+{% extends 'autologbackend/base.html' %}
+{% block content %}
 <h1> {{ vehicle.license_plate }}: {{ vehicle.build_year }} {{ vehicle.vehicle_make }} {{ vehicle.vehicle_model }}</h1>
 <table>
 <tr><td>Mileage</td><td>{{ last_trip.arrival_mileage }}</td></tr>
@@ -37,3 +39,4 @@
 {% else %}
     <p>No trips are available.</p>
 {% endif %}
+{% endblock %}

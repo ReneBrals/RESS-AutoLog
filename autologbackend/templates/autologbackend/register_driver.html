@@ -1,7 +1,14 @@
-<h1>Register driver</h1>
-<form action="{% url 'submit_register_driver' %}" method="post"> {% csrf_token %}
+{% extends 'autologbackend/base.html' %}
+{% block content %}
+<h2>Register driver</h1>
+<hr>
 
-<h4>Personal information</h4>
-Name: <input type="text" name="name"> <br />
-<input type="submit" value="Register" />
+<form action="{% url 'submit_register_driver' %}" method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name">Driver name</label>
+        <input class="form-control" type="text" name="name">
+    </div>
+    <input class="form-control btn-primary" type="submit" value="Register" />
 </form>
+{% endblock %}

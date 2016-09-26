@@ -1,29 +1,28 @@
+{% extends 'autologbackend/base.html' %}
+
+{% block content %}
 <h3> Latest trips </h3>
 {% if latest_trips_list %}
 	
 
-    <table>
+    <table class="table table-striped">
 		<tr>
     		<th>Vehicle</th>
     		<td></td>
     		<th>Driver</th> 
     		<th>From</th>
-    		<th></th>
     		<th>To</th>
-    		<th></th>
-    		<th>Mileage dep.</th>
     		<th>Mileage arr.</th>
+    		<th>Mileage dep.</th>
   		</tr>
 
     	{% for trip in latest_trips_list %}
     	<tr>
     	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
-    	<td>{{ trip.vehicle.build_year }} {{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
+    	<td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
     	<td>{{ trip.driver.name }}</td>
-    	<td>{{ trip.departure_time }}</td>
-    	<td>{{ trip.departure_location }}</td>
-    	<td>{{ trip.arrival_time }}</td>
-    	<td>{{ trip.arrival_location }}</td>
+    	<td>{{ trip.departure_location }} - {{ trip.departure_time }}</td>
+    	<td>{{ trip.arrival_location }} - {{ trip.arrival_time }}</td>
     	<td>{{ trip.departure_mileage }}</td>
     	<td>{{ trip.arrival_mileage }}</td>
 
@@ -34,6 +33,4 @@
     <p>No trips are available.</p>
 {% endif %}
 
-<a href="{% url 'log_trip' %}"> Log a trip</a>
-<a href="{% url 'register_driver' %}"> Register a driver</a>
-<a href="{% url 'register_vehicle' %}"> Register a vehicle</a>
+{% endblock %}

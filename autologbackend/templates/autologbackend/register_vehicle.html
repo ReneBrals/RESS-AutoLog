@@ -1,10 +1,29 @@
-<h1>Register vehicle</h1>
+{% extends 'autologbackend/base.html' %}
+{% block content %}
+<h2>Register vehicle</h2>
 <form action="{% url 'submit_register_vehicle' %}" method="post">{% csrf_token %}
-
-License plate: <input type="text" name="license_plate"> <br />
-Build year: <input type="text" name="build_year"> <br />
-Make: <input type="text" name="make"> <br />
-Model: <input type="text" name="model"> <br />
-Mileage: <input type="number" name="mileage"> <input type="radio" name="mileage_unit" id="mu1" value="km"/> km <input type="radio" name="mileage_unit" id="mu1" value="mi"/> mi <br />
-<input type="submit" value="Register" />
+    <div class="form-group">
+        <label for="license_plate">License plate</label>
+        <input class="form-control" type="text" name="license_plate">
+    </div>
+    <div class="form-group">
+        <label for="build_year">Build year</label>
+        <input class="form-control" type="text" name="build_year">
+    </div>
+    <div class="form-group">
+        <label for="make">Make</label>
+        <input class="form-control" type="text" name="make">
+    </div>
+    <div class="form-group">
+        <label for="model">Model</label>
+        <input class="form-control" type="text" name="model">
+    </div>
+    <div class="form-group">
+        <label for="milage">Mileage</label>
+        <input class="form-control" type="number" name="mileage"> 
+        <label class="radio-inline"><input type="radio" name="mileage_unit" id="mu1" value="km"/>Kilometers</label> 
+        <label class="radio-inline"><input type="radio" name="mileage_unit" id="mu1" value="mi"/>Miles</label>
+    </div>
+    <input class="form-control btn-primary" type="submit" value="Register" />
 </form>
+{% endblock %}
