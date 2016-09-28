@@ -2,46 +2,7 @@
 
 {% block content %}
 <h3> Logged trips </h3>
-{% if trips_list %}
-
-    <table class="table table-striped">
-		<tr>
-    		<th>Vehicle</th>
-    		<td></td>
-    		<th>Driver</th> 
-    		<th>From</th>
-            <th></th>
-            <th>To</th>
-            <th></th>
-            <th>Distance</th>
-    		<th>Mileage arr.</th>
-    		<th>Mileage dep.</th>
-  		</tr>
-
-    	{% for trip in trips_list %}
-    	<tr>
-    	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
-    	<td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
-    	<td>{{ trip.driver.name }}</td>
-    	<td>{{ trip.departure_location }}</td>
-        <td>{{ trip.departure_time }}</td>
-        
-        <td>{{ trip.arrival_location }}</td>
-        <td>{{ trip.arrival_time }}</td>
-        <td>{{ trip.distance }}</td>
-    	<td>{{ trip.departure_mileage }}</td>
-    	<td>{{ trip.arrival_mileage }}</td>
-
-    	</tr>
-    	{% endfor %}
-    </table>
-{% else %}
-    <p>No trips are available.</p>
-{% endif %}
-
-<h3> Filter </h3>
-
-<form action="{% url 'trips' %}" method="post"> {% csrf_token %}
+<form action="{% url 'trips' 0 %}" method="post"> {% csrf_token %}
     <div class="row">
         <div class="col-lg-3">
             <div class="input-group">
@@ -88,8 +49,105 @@
     <br/>
     <button type="submit" class="btn btn-primary">Filter</button>
 
-    <button href="{%url 'trips' %}" class="btn btn-warning"> Clear Filters</button>
+    <button href="{%url 'trips' 0 %}" class="btn btn-warning"> Clear Filters</button>
 
 </form>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="{% url 'trips' prev_page_nr %}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% if num_pages > 5 %}
+    <li><a href="{% url 'trips' 0 %}">1</a></li>
+    <li><a href="{% url 'trips' 1 %}">2</a></li>
+    <li><a href="{% url 'trips' 2 %}">3</a></li>
+
+    <li><a href="{% url 'trips' num_pages|add:"-2" %}">{{ num_pages|add:"-1" }}</a></li>
+    <li><a href="{% url 'trips' num_pages|add:"-1" %}">{{ num_pages }}</a></li>
+    {% else %}
+    {% with ''|center:num_pages as range %}
+    {% for _ in range %}
+        <li><a href="{% url 'trips' forloop.counter0 %}">{{ forloop.counter }}</a></li>
+    {% endfor %}
+    {% endwith %}
+    {% endif %}
+    <li>
+        <a href="{% url 'trips' next_page_nr %}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+  </ul>
+</nav>
+
+<br/>
+
+{% if trips_list %}
+
+    <table class="table table-striped">
+		<tr>
+    		<th>Vehicle</th>
+    		<td></td>
+    		<th>Driver</th> 
+    		<th>From</th>
+            <th></th>
+            <th>To</th>
+            <th></th>
+            <th>Distance</th>
+    		<th>Mileage arr.</th>
+    		<th>Mileage dep.</th>
+  		</tr>
+
+    	{% for trip in trips_list %}
+    	<tr>
+    	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
+    	<td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
+    	<td>{{ trip.driver.name }}</td>
+    	<td>{{ trip.departure_location }}</td>
+        <td>{{ trip.departure_time }}</td>
+        
+        <td>{{ trip.arrival_location }}</td>
+        <td>{{ trip.arrival_time }}</td>
+        <td>{{ trip.distance }}</td>
+    	<td>{{ trip.departure_mileage }}</td>
+    	<td>{{ trip.arrival_mileage }}</td>
+
+    	</tr>
+    	{% endfor %}
+    </table>
+{% else %}
+    <p>No trips are available.</p>
+{% endif %}
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="{% url 'trips' prev_page_nr %}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% if num_pages > 5 %}
+    <li><a href="{% url 'trips' 0 %}">1</a></li>
+    <li><a href="{% url 'trips' 1 %}">2</a></li>
+    <li><a href="{% url 'trips' 2 %}">3</a></li>
+
+    <li><a href="{% url 'trips' num_pages|add:"-2" %}">{{ num_pages|add:"-1" }}</a></li>
+    <li><a href="{% url 'trips' num_pages|add:"-1" %}">{{ num_pages }}</a></li>
+    {% else %}
+    {% with ''|center:num_pages as range %}
+    {% for _ in range %}
+        <li><a href="{% url 'trips' forloop.counter0 %}">{{ forloop.counter }}</a></li>
+    {% endfor %}
+    {% endwith %}
+    {% endif %}
+    <li>
+        <a href="{% url 'trips' next_page_nr %}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+  </ul>
+</nav>
 
 {% endblock %}

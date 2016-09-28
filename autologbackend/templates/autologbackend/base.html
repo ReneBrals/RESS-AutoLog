@@ -33,7 +33,7 @@
 	<div id="sidebar-wrapper">
 		<ul class="sidebar-nav">
 			<li class="sidebar-brand">
-				<a href="#">
+				<a href="{% url 'index' %}">
 				<span class="glyphicon glyphicon-road" aria-hidden="true"></span>
 					AutoLog Admin
 				</a>
@@ -51,7 +51,7 @@
 				<a href="{% url 'register_vehicle' %}">Register vehicle</a>
 			</li>
 			<li>
-				<a href="{% url 'trips' %}">All trips</a>
+				<a href="{% url 'trips' 0 %}">All trips</a>
 			</li>
 		</ul>
 	</div>
