@@ -5,6 +5,8 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.db.models import F
 from django.template import loader
+from django.db.models.functions import Concat
+from django.db.models import Value as V
 
 from .models import Vehicle, Driver, Trip
 
@@ -128,3 +130,63 @@ def submit_register_vehicle(request):
 
 		vehicle.save()
 		return HttpResponseRedirect(reverse('index'))
+
+def trips(request):
+	trips_list = Trip.objects.order_by('-arrival_time')
+	trips_list = trips_list.annotate(distance=F('arrival_mileage')-F('departure_mileage'))
+	trips_list = trips_list.annotate(veh=Concat('vehicle__license_plate', V(' '), 'vehicle__vehicle_make', V(' '), 'vehicle__vehicle_model'))
+
+	context = {}
+
+	try:
+		trips_list = trips_list.filter(veh__icontains=request.POST['vehicle'])
+		context['vehicle_fill'] = request.POST['vehicle']
+	except:
+		pass
+
+	try:
+		trips_list = trips_list.filter(driver__name__icontains=request.POST['driver'])
+		context['driver_fill'] = request.POST['driver']
+	except:
+		pass
+
+	try:
+		trips_list = trips_list.filter(departure_location__icontains=request.POST['departure_location'])
+		context['dep_fill'] = request.POST['departure_location']
+	except:
+		pass
+
+	try:
+		trips_list = trips_list.filter(arrival_location__icontains=request.POST['arrival_location'])
+		context['arr_fill'] = request.POST['arrival_location']
+	except:
+		pass
+
+	try:
+		trips_list = trips_list.filter(distance__gte=request.POST['min_dist'])
+		context['mindist_fill'] = request.POST['min_dist']
+	except:
+		pass
+
+	try:
+		trips_list = trips_list.filter(distance__lte=request.POST['max_dist'])
+		context['maxdist_fill'] = request.POST['max_dist']
+	except:
+		pass
+
+	try:
+		trips_list = trips_list.filter(arrival_time__gte= parse_date(request.POST['begin_date']))
+		context['bdate_fill'] = request.POST['begin_date']
+	except:
+		pass
+
+	try:
+		trips_list = trips_list.filter(arrival_time__lte= parse_date(request.POST['end_date']))
+		context['edate_fill'] = request.POST['end_date']
+	except:
+		pass
+
+	context['trips_list'] = trips_list
+
+	template = loader.get_template('autologbackend/trips.html')
+	return HttpResponse(template.render(context,request))

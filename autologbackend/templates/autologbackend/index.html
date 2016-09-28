@@ -11,7 +11,9 @@
     		<td></td>
     		<th>Driver</th> 
     		<th>From</th>
-    		<th>To</th>
+            <th></th>
+            <th>To</th>
+            <th></th>
             <th>Distance</th>
     		<th>Mileage arr.</th>
     		<th>Mileage dep.</th>
@@ -22,8 +24,11 @@
     	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
     	<td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
     	<td>{{ trip.driver.name }}</td>
-    	<td>{{ trip.departure_location }} - {{ trip.departure_time }}</td>
-    	<td>{{ trip.arrival_location }} - {{ trip.arrival_time }}</td>
+    	<td>{{ trip.departure_location }}</td>
+        <td>{{ trip.departure_time }}</td>
+        
+        <td>{{ trip.arrival_location }}</td>
+        <td>{{ trip.arrival_time }}</td>
         <td>{{ trip.distance }}</td>
     	<td>{{ trip.departure_mileage }}</td>
     	<td>{{ trip.arrival_mileage }}</td>

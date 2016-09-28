@@ -1,0 +1,95 @@
+{% extends 'autologbackend/base.html' %}
+
+{% block content %}
+<h3> Logged trips </h3>
+{% if trips_list %}
+
+    <table class="table table-striped">
+		<tr>
+    		<th>Vehicle</th>
+    		<td></td>
+    		<th>Driver</th> 
+    		<th>From</th>
+            <th></th>
+            <th>To</th>
+            <th></th>
+            <th>Distance</th>
+    		<th>Mileage arr.</th>
+    		<th>Mileage dep.</th>
+  		</tr>
+
+    	{% for trip in trips_list %}
+    	<tr>
+    	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
+    	<td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
+    	<td>{{ trip.driver.name }}</td>
+    	<td>{{ trip.departure_location }}</td>
+        <td>{{ trip.departure_time }}</td>
+        
+        <td>{{ trip.arrival_location }}</td>
+        <td>{{ trip.arrival_time }}</td>
+        <td>{{ trip.distance }}</td>
+    	<td>{{ trip.departure_mileage }}</td>
+    	<td>{{ trip.arrival_mileage }}</td>
+
+    	</tr>
+    	{% endfor %}
+    </table>
+{% else %}
+    <p>No trips are available.</p>
+{% endif %}
+
+<h3> Filter </h3>
+
+<form action="{% url 'trips' %}" method="post"> {% csrf_token %}
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Vehicle</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="vehicle" {% if vehicle_fill %} value={{ vehicle_fill }} {% endif %}>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Driver</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="driver" {% if driver_fill %} value={{ driver_fill }} {% endif %}>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">From</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="departure_location" {% if dep_fill %} value={{ dep_fill }} {% endif %}>
+                <span class="input-group-addon" aria-describedby="basic-addon1">To</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="arrival_location" {% if arr_fill %} value={{ arr_fill }} {% endif %}>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Distance</span>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" placeholder="min. distance" name="min_dist" {% if mindist_fill %} value={{ mindist_fill }} {% endif %}>
+                <span class="input-group-addon" aria-describedby="basic-addon1"> - </span>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" placeholder="max. distance" name="max_dist" {% if maxdist_fill %} value={{ maxdist_fill }} {% endif %}>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">Date Range</span>
+                <input type="date" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="begin_date" {% if bdate_fill %} value={{ bdate_fill }} {% endif %}>
+                <span class="input-group-addon" aria-describedby="basic-addon1"> - </span>
+                <input type="date" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="end_date" {% if edate_fill %} value={{ edate_fill }} {% endif %}>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">Filter</button>
+
+    <button href="{%url 'trips' %}" class="btn btn-warning"> Clear Filters</button>
+
+</form>
+
+{% endblock %}
