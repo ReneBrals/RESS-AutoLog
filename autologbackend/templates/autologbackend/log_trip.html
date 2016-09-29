@@ -9,7 +9,7 @@
         <label for="vehicle">Vehicle</label>
         <select class="form-control" name="vehicle">
         {% for veh in vehicles %}
-            <option id=vehicle{{ forloop.counter }} value="{{ veh.id }}">{{ veh.license_plate }} - {{ veh.vehicle_make }} {{ veh.vehicle_model }}</option> 
+            <option id="vehicle{{ forloop.counter }}" value="{{ veh.id }}">{{ veh.license_plate }} - {{ veh.vehicle_make }} {{ veh.vehicle_model }}</option> 
         {% endfor %}
         </select>
     </div>
@@ -26,29 +26,29 @@
     <br />
     <h4><b>Location and time<b></h4>
     <hr>
-
+    <div class="form-group">
+        <label for="departure_location">Departure location</label>
+        <input class="form-control" type="text" name="departure_location">
+    </div>
     <div class="form-group">
         <label for="departure_date">Departure time</label>
         <input class="form-control" type="date" name ="departure_date">
         <input class="form-control" type="time" name ="departure_time">
     </div>
-    <div class="form-group">
-        <label for="departure_location">Departure location</label>
-        <input class="form-control" type="text" name="departure_location">
-    </div>
+    
     <div class="form-group">
         <label for="departure_milage">Departure milage</label>
         <input class="form-control" type="number" name="departure_mileage">
     </div>
     <hr />
     <div class="form-group">
+        <label for="arrival_location">Arrival location</label>
+        <input class="form-control" type="text" name="arrival_location">
+    </div>
+    <div class="form-group">
         <label for="arrival_date">Arrival time</label>
         <input class="form-control" type="date" name ="arrival_date">
         <input class="form-control" type="time" name ="arrival_time">
-    </div>
-    <div class="form-group">
-        <label for="arrival_location">Arrival location</label>
-        <input class="form-control" type="text" name="arrival_location">
     </div>
     <div class="form-group">
         <label for="arrival_milage">Arrival milage</label>

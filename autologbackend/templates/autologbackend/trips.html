@@ -99,6 +99,7 @@
             <th>Distance</th>
             <th>Mileage dep.</th>
     		<th>Mileage arr.</th>
+            <th></th>
   		</tr>
 
     	{% for trip in trips_list %}
@@ -114,6 +115,9 @@
         <td>{{ trip.distance }} {{ trip.vehicle.mileage_unit }}</td>
     	<td>{{ trip.departure_mileage }} {{ trip.vehicle.mileage_unit }}</td>
     	<td>{{ trip.arrival_mileage }} {{ trip.vehicle.mileage_unit }}</td>
+        <td>
+        <a href="{% url 'edit_trip' trip.pk %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+        <a href="{% url 'delete_trip' trip.pk %}"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></a></td>
 
     	</tr>
     	{% endfor %}

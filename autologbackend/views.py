@@ -74,7 +74,7 @@ def submit_log_trip(request):
 
 		arrival_location = request.POST["arrival_location"]
 	except KeyError as e:
-		return HttpResponse('Something went wrong. <br />' + e.toString())
+		pass
 	else:
 		trip = Trip(
 			vehicle=selected_vehicle,
@@ -88,7 +88,47 @@ def submit_log_trip(request):
 		)
 		trip.save()
 
-		return HttpResponseRedirect(reverse('index'))
+		return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+
+def edit_trip(request, trip_id):
+	trip = Trip.objects.get(pk=trip_id)
+	vehicles = Vehicle.objects.order_by('license_plate')
+	drivers = Driver.objects.order_by('name')
+
+	context = {
+		'trip' : trip,
+		'vehicles' : vehicles,
+		'drivers' : drivers,
+	}
+
+	template = loader.get_template('autologbackend/edit_trip.html')
+	return HttpResponse(template.render(context,request))
+
+def submit_edit_trip(request, trip_id):
+	trip = Trip.objects.get(pk=trip_id)
+
+	trip.vehicle= Vehicle.objects.get(pk=request.POST['vehicle']) 
+	trip.driver = Driver.objects.get(pk=request.POST['driver']) 
+	trip.arrival_location = request.POST['arrival_location']
+	trip.departure_location = request.POST['departure_location']
+	trip.departure_mileage = int(request.POST['departure_mileage'])
+	trip.arrival_mileage = int(request.POST['arrival_mileage'])
+
+	trip.departure_time = datetime.datetime.combine(
+			parse_date(request.POST["departure_date"]),
+			parse_time(request.POST["departure_time"])
+	)
+
+	trip.arrival_time = datetime.datetime.combine(
+			parse_date(request.POST["arrival_date"]),
+			parse_time(request.POST["arrival_time"])
+	)
+
+	trip.save()
+
+	return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+
+
 
 def register_driver(request):
 	return render(request,'autologbackend/register_driver.html')
@@ -207,3 +247,8 @@ def trips(request, page_nr):
 
 	template = loader.get_template('autologbackend/trips.html')
 	return HttpResponse(template.render(context,request))
+
+def delete_trip(request,trip_id):
+	Trip.objects.get(pk=trip_id).delete()
+
+	return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
