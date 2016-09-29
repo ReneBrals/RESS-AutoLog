@@ -141,50 +141,50 @@ def trips(request, page_nr):
 	context = {}
 
 	try:
-		trips_list = trips_list.filter(veh__icontains=request.POST['vehicle'])
-		context['vehicle_fill'] = request.POST['vehicle']
+		trips_list = trips_list.filter(veh__icontains=request.GET['vehicle'])
+		context['vehicle_fill'] = request.GET['vehicle']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(driver__name__icontains=request.POST['driver'])
-		context['driver_fill'] = request.POST['driver']
+		trips_list = trips_list.filter(driver__name__icontains=request.GET['driver'])
+		context['driver_fill'] = request.GET['driver']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(departure_location__icontains=request.POST['departure_location'])
-		context['dep_fill'] = request.POST['departure_location']
+		trips_list = trips_list.filter(departure_location__icontains=request.GET['departure_location'])
+		context['dep_fill'] = request.GET['departure_location']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(arrival_location__icontains=request.POST['arrival_location'])
-		context['arr_fill'] = request.POST['arrival_location']
+		trips_list = trips_list.filter(arrival_location__icontains=request.GET['arrival_location'])
+		context['arr_fill'] = request.GET['arrival_location']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(distance__gte=request.POST['min_dist'])
-		context['mindist_fill'] = request.POST['min_dist']
+		trips_list = trips_list.filter(distance__gte=request.GET['min_dist'])
+		context['mindist_fill'] = request.GET['min_dist']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(distance__lte=request.POST['max_dist'])
-		context['maxdist_fill'] = request.POST['max_dist']
+		trips_list = trips_list.filter(distance__lte=request.GET['max_dist'])
+		context['maxdist_fill'] = request.GET['max_dist']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(arrival_time__gte= parse_date(request.POST['begin_date']))
-		context['bdate_fill'] = request.POST['begin_date']
+		trips_list = trips_list.filter(arrival_time__gte= parse_date(request.GET['begin_date']))
+		context['bdate_fill'] = request.GET['begin_date']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(arrival_time__lte= parse_date(request.POST['end_date']))
-		context['edate_fill'] = request.POST['end_date']
+		trips_list = trips_list.filter(arrival_time__lte= parse_date(request.GET['end_date']))
+		context['edate_fill'] = request.GET['end_date']
 	except:
 		pass
 

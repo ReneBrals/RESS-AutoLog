@@ -1,8 +1,8 @@
 {% extends 'autologbackend/base.html' %}
-
+{% load extras %}
 {% block content %}
 <h3> Logged trips </h3>
-<form action="{% url 'trips' 0 %}" method="post"> {% csrf_token %}
+<form action="{% url 'trips' 0 %}" method="GET">
     <div class="row">
         <div class="col-lg-3">
             <div class="input-group">
@@ -57,26 +57,26 @@
 <nav aria-label="Page navigation">
   <ul class="pagination">
     <li>
-      <a href="{% url 'trips' prev_page_nr %}" aria-label="Previous">
+      <a href="{% url 'trips' prev_page_nr %}{% GET_string %}" aria-label="Previous">
         <span aria-hidden="true">&laquo;</span>
       </a>
     </li>
     {% if num_pages > 5 %}
-    <li><a href="{% url 'trips' 0 %}">1</a></li>
-    <li><a href="{% url 'trips' 1 %}">2</a></li>
-    <li><a href="{% url 'trips' 2 %}">3</a></li>
+    <li><a href="{% url 'trips' 0 %}{% GET_string %}">1</a></li>
+    <li><a href="{% url 'trips' 1 %}{% GET_string %}">2</a></li>
+    <li><a href="{% url 'trips' 2 %}{% GET_string %}">3</a></li>
 
-    <li><a href="{% url 'trips' num_pages|add:"-2" %}">{{ num_pages|add:"-1" }}</a></li>
-    <li><a href="{% url 'trips' num_pages|add:"-1" %}">{{ num_pages }}</a></li>
+    <li><a href="{% url 'trips' num_pages|add:"-2" %}{% GET_string %}">{{ num_pages|add:"-1" }}</a></li>
+    <li><a href="{% url 'trips' num_pages|add:"-1" %}{% GET_string %}">{{ num_pages }}</a></li>
     {% else %}
     {% with ''|center:num_pages as range %}
     {% for _ in range %}
-        <li><a href="{% url 'trips' forloop.counter0 %}">{{ forloop.counter }}</a></li>
+        <li><a href="{% url 'trips' forloop.counter0 %}{% GET_string %}">{{ forloop.counter }}</a></li>
     {% endfor %}
     {% endwith %}
     {% endif %}
     <li>
-        <a href="{% url 'trips' next_page_nr %}" aria-label="Next">
+        <a href="{% url 'trips' next_page_nr %}{% GET_string %}" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
         </a>
     </li>
