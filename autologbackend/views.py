@@ -132,7 +132,7 @@ def submit_register_vehicle(request):
 		return HttpResponseRedirect(reverse('index'))
 
 def trips(request, page_nr):
-	RESULTS_PER_PAGE = 25
+	RESULTS_PER_PAGE = 20
 
 	trips_list = Trip.objects.order_by('-arrival_time')
 	trips_list = trips_list.annotate(distance=F('arrival_mileage')-F('departure_mileage'))
@@ -192,15 +192,17 @@ def trips(request, page_nr):
 	if trips_list.count()%RESULTS_PER_PAGE:
 		num_pages += 1
 
+
+
 	context['num_pages'] = num_pages
 	context['page_nr'] = page_nr
 	context['prev_page_nr'] = 0 if int(page_nr) == 0 else int(page_nr) - 1
 	context['next_page_nr'] = int(page_nr) + 1 if int(page_nr) < (num_pages - 1) else int(page_nr)
 
 	if int(page_nr) < num_pages:
-		trips_l = trips_list[int(page_nr)*RESULTS_PER_PAGE:(int(page_nr)+1)*RESULTS_PER_PAGE]
+		trips_list = trips_list[int(page_nr)*RESULTS_PER_PAGE:(int(page_nr)+1)*RESULTS_PER_PAGE]
 
-	context['trips_list'] = trips_l
+	context['trips_list'] = trips_list
 
 
 	template = loader.get_template('autologbackend/trips.html')

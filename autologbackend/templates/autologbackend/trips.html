@@ -47,9 +47,10 @@
         </div>
     </div>
     <br/>
-    <button type="submit" class="btn btn-primary">Filter</button>
+    <button type="submit" class="btn btn-success">Filter</button>
 
-    <button href="{%url 'trips' 0 %}" class="btn btn-warning"> Clear Filters</button>
+    <a href="{%url 'trips' 0 %}" class="btn btn-warning"> Clear Filters</a>
+    <a href="{%url 'log_trip' %}" class="btn btn-primary"> Log a Trip</a>
 
 </form>
 
@@ -96,8 +97,8 @@
             <th>To</th>
             <th></th>
             <th>Distance</th>
+            <th>Mileage dep.</th>
     		<th>Mileage arr.</th>
-    		<th>Mileage dep.</th>
   		</tr>
 
     	{% for trip in trips_list %}
@@ -110,9 +111,9 @@
         
         <td>{{ trip.arrival_location }}</td>
         <td>{{ trip.arrival_time }}</td>
-        <td>{{ trip.distance }}</td>
-    	<td>{{ trip.departure_mileage }}</td>
-    	<td>{{ trip.arrival_mileage }}</td>
+        <td>{{ trip.distance }} {{ trip.vehicle.mileage_unit }}</td>
+    	<td>{{ trip.departure_mileage }} {{ trip.vehicle.mileage_unit }}</td>
+    	<td>{{ trip.arrival_mileage }} {{ trip.vehicle.mileage_unit }}</td>
 
     	</tr>
     	{% endfor %}
