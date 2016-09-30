@@ -42,17 +42,22 @@
 				<a href="{% url 'index' %}">Overview</a>
 			</li>
 			<li>
+				<a href="{% url 'trips' 0 %}">All trips</a>
+			</li>
+			<li>
 				<a href="{% url 'log_trip' %}">Log a trip</a>
 			</li>
 			<li>
-				<a href="{% url 'register_driver' %}">Register driver</a>
+				<a href="{% url 'vehicles' 0 %}">All vehicles</a>
 			</li>
 			<li>
 				<a href="{% url 'register_vehicle' %}">Register vehicle</a>
 			</li>
 			<li>
-				<a href="{% url 'trips' 0 %}">All trips</a>
+				<a href="{% url 'register_driver' %}">Register driver</a>
 			</li>
+			
+			
 		</ul>
 	</div>
 	<!-- /#sidebar-wrapper -->

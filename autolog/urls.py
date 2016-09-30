@@ -22,5 +22,5 @@ from . import views
 urlpatterns = [
     url(r'^autologbackend/', include('autologbackend.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'', views.redir, name='redir')
+    url(r'^$', views.redir, name='redir')
 ]

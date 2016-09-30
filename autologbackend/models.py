@@ -9,7 +9,6 @@ class Vehicle(models.Model):
 	vehicle_make = models.CharField(max_length=32)
 	vehicle_model = models.CharField(max_length=32)
 	build_year = models.IntegerField(default=0)
-	mileage = models.IntegerField(default=0)
 	mileage_unit = models.CharField(max_length=2,choices=(('mi','miles'),('km','kilometers')),default='km')
 
 class Driver(models.Model):

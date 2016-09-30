@@ -1,0 +1,93 @@
+{% extends 'autologbackend/base.html' %}
+{% block content %}
+<h3> Vehicles </h3>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="{% url 'vehicles' prev_page_nr %}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% if num_pages > 5 %}
+    <li><a href="{% url 'vehicles' 0 %}">1</a></li>
+    <li><a href="{% url 'vehicles' 1 %}">2</a></li>
+    <li><a href="{% url 'vehicles' 2 %}">3</a></li>
+
+    <li><a href="{% url 'vehicles' num_pages|add:"-2" %}">{{ num_pages|add:"-1" }}</a></li>
+    <li><a href="{% url 'vehicles' num_pages|add:"-1" %}">{{ num_pages }}</a></li>
+    {% else %}
+    {% with ''|center:num_pages as range %}
+    {% for _ in range %}
+        <li><a href="{% url 'vehicles' forloop.counter0 %}">{{ forloop.counter }}</a></li>
+    {% endfor %}
+    {% endwith %}
+    {% endif %}
+    <li>
+        <a href="{% url 'vehicles' next_page_nr %}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+  </ul>
+</nav>
+
+<br/>
+
+{% if vehicle_list %}
+
+    <table class="table table-striped">
+		<tr>
+    		<th>Vehicle</th>
+    		<th></th>
+    		<th>Last Driver</th> 
+    		<th>Last Known Location</th>
+    		<th>Last Driven</th>
+            <th>Mileage</th>
+            <th></th>
+  		</tr>
+
+    	{% for veh in vehicle_list %}
+    	<tr>
+    	<td><a href="{% url 'vehicle_detail' veh.id %}">{{ veh.license_plate }}</a></td>
+    	<td>{{ veh.vehicle_make }} {{ veh.vehicle_model }}</td>
+    	<td>{% if veh.last_trip.driver.name %} {{ veh.last_trip.driver.name }} {% else %} --- {% endif %}</td>
+    	<td>{% if veh.last_trip.arrival_location %} {{ veh.last_trip.arrival_location }} {% else %} --- {% endif %}</td>
+    	<td>{% if veh.last_trip.arrival_time %} {{ veh.last_trip.arrival_time }} {% else %} --- {% endif %}</td>
+        <td>{% if veh.last_trip.arrival_mileage %} {{ veh.last_trip.arrival_mileage }} {{ veh.mileage_unit }}{% else %} --- {% endif %}</td>
+        <td><a href="{% url 'delete_vehicle' veh.id %}"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></a></td>
+    	</tr>
+    	{% endfor %}
+    </table>
+{% else %}
+    <p>No vehicles are available.</p>
+{% endif %}
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="{% url 'vehicles' prev_page_nr %}" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+      </a>
+    </li>
+    {% if num_pages > 5 %}
+    <li><a href="{% url 'vehicles' 0 %}">1</a></li>
+    <li><a href="{% url 'vehicles' 1 %}">2</a></li>
+    <li><a href="{% url 'vehicles' 2 %}">3</a></li>
+
+    <li><a href="{% url 'vehicles' num_pages|add:"-2" %}">{{ num_pages|add:"-1" }}</a></li>
+    <li><a href="{% url 'vehicles' num_pages|add:"-1" %}">{{ num_pages }}</a></li>
+    {% else %}
+    {% with ''|center:num_pages as range %}
+    {% for _ in range %}
+        <li><a href="{% url 'vehicles' forloop.counter0 %}">{{ forloop.counter }}</a></li>
+    {% endfor %}
+    {% endwith %}
+    {% endif %}
+    <li>
+        <a href="{% url 'vehicles' next_page_nr %}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+  </ul>
+</nav>
+{% endblock %}

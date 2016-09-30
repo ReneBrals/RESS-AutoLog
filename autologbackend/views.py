@@ -7,6 +7,7 @@ from django.db.models import F
 from django.template import loader
 from django.db.models.functions import Concat
 from django.db.models import Value as V
+from django.db.models import Max
 
 from .models import Vehicle, Driver, Trip
 
@@ -252,3 +253,35 @@ def delete_trip(request,trip_id):
 	Trip.objects.get(pk=trip_id).delete()
 
 	return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+
+def vehicles(request, page_nr):
+	RESULTS_PER_PAGE = 20
+
+	context= {}
+	
+
+	vehs = Vehicle.objects.order_by('license_plate').annotate(last_date=Max("license_plate"))
+	num_pages = vehs.count()/RESULTS_PER_PAGE
+	if vehs.count()%RESULTS_PER_PAGE:
+		num_pages += 1
+	for e in vehs:
+		try:
+		    e.last_trip = Trip.objects.filter(vehicle=e).order_by('-arrival_time')[0]
+		except:
+			pass
+
+
+	context['vehicle_list'] = vehs
+	context['page_nr'] = page_nr
+	context['num_pages'] = num_pages
+	context['prev_page_nr'] = 0 if int(page_nr) == 0 else int(page_nr) - 1
+	context['next_page_nr'] = int(page_nr) + 1 if int(page_nr) < (num_pages - 1) else int(page_nr)
+
+	template = loader.get_template('autologbackend/vehicles.html')
+	return HttpResponse(template.render(context,request))
+
+def delete_vehicle(request, vehicle_id):
+	vehicle = Vehicle.objects.get(pk=vehicle_id)
+	vehicle.delete()
+
+	return HttpResponseRedirect(reverse('vehicles', kwargs={'page_nr': 0}))
