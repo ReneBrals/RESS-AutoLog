@@ -1,0 +1,121 @@
+﻿PhoneGap app
+Intial commit with basic log trip layout
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	new file:   autologfrontend/AutoLog/config.xml
+#	new file:   autologfrontend/AutoLog/platforms/browser/browser.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/config.xml
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/build
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/build.bat
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/clean
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/defaults.xml
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/lib/build.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/lib/check_reqs.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/lib/clean.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/README.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/adm-zip.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/headers/entryHeader.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/headers/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/headers/mainHeader.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/methods/deflater.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/methods/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/methods/inflater.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/util/constants.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/util/errors.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/util/fattr.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/util/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/util/utils.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/zipEntry.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/adm-zip/zipFile.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/.jshintrc
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/license
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/ansi-styles/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/ansi-styles/license
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/ansi-styles/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/ansi-styles/readme.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/escape-string-regexp/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/escape-string-regexp/license
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/escape-string-regexp/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/escape-string-regexp/readme.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/has-ansi/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/has-ansi/license
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/has-ansi/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/has-ansi/readme.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/strip-ansi/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/strip-ansi/license
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/strip-ansi/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/strip-ansi/readme.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/supports-color/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/supports-color/license
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/supports-color/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/node_modules/supports-color/readme.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/chalk/readme.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/HISTORY.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/LICENSE
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/accepts/HISTORY.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/accepts/LICENSE
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/accepts/README.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/accepts/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/accepts/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/bytes/History.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/bytes/LICENSE
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/bytes/Readme.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/bytes/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/bytes/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/compressible/HISTORY.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/compressible/LICENSE
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/compressible/README.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/compressible/index.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/compressible/package.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/.jshintrc
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/.npmignore
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/History.md
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/Makefile
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/bower.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/browser.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/component.json
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/debug.js
+#	new file:   autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/node.js
+#
+# Untracked files:
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/README.md
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/RELEASENOTES.md
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/README.md
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/Readme.md
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/node_modules/
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/debug/package.json
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/on-headers/
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/node_modules/vary/
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/compression/package.json
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/node_modules/express/
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/package.json
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/serve.js
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/cordova-serve/src/
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/nopt/
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/q/
+#	autologfrontend/AutoLog/platforms/browser/cordova/node_modules/shelljs/
+#	autologfrontend/AutoLog/platforms/browser/cordova/run
+#	autologfrontend/AutoLog/platforms/browser/cordova/run.bat
+#	autologfrontend/AutoLog/platforms/browser/cordova/version
+#	autologfrontend/AutoLog/platforms/browser/cordova/version.bat
+#	autologfrontend/AutoLog/platforms/browser/css/
+#	autologfrontend/AutoLog/platforms/browser/img/
+#	autologfrontend/AutoLog/platforms/browser/index.html
+#	autologfrontend/AutoLog/platforms/browser/js/
+#	autologfrontend/AutoLog/platforms/browser/manifest.webapp
+#	autologfrontend/AutoLog/platforms/browser/platform_www/
+#	autologfrontend/AutoLog/platforms/browser/res/
+#	autologfrontend/AutoLog/platforms/browser/www/
+#	autologfrontend/AutoLog/platforms/platforms.json
+#	autologfrontend/AutoLog/plugins/
+#	autologfrontend/AutoLog/www/
+#
+

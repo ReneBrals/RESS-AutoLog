@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>jQuery Mobile: Theme Download</title>
+	<link rel="stylesheet" href="css/themes/AutoLog.min.css" />
+	<link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+	<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+</head>
+
+<body>
+  <div data-role="page">
+    <div data-role="header">
+      <h1>AutoLog</h1>
+    </div><!-- /header -->
+
+    <div data-role="content">	
+      <h2>Log trip</h2>		
+      <hr />
+      
+      <form>
+      <div class="ui-field-contain">
+          <label for="select-native-1">Vehicle:</label>
+          <select name="select-native-1" id="select-native-1">
+              <option id="vehicle1" value="4">34-HL-KJ - Citroën Xsara Picasso</option> 
+        
+              <option id="vehicle2" value="3">9-TVR-47 - Audi S8</option> 
+          
+              <option id="vehicle3" value="2">91-LR-KN - Citroën Berlingo</option> 
+          
+              <option id="vehicle4" value="1">JH-285-R - Volkswagen Golf 1.4</option> 
+          </select>
+      </div>
+      
+      <div class="ui-field-contain">
+          <label for="select-native-2">Driver:</label>
+          <select name="select-native-2" id="select-native-2">
+              <option id="driver1" value="4">Jorien Steenhouwer</option>
+        
+              <option id="driver2" value="5">Merel de Smet</option>
+          
+              <option id="driver3" value="2">Miranda de Graaf</option>
+          
+              <option id="driver4" value="1">René Brals</option>
+          
+              <option id="driver5" value="3">Stefan van der Meer</option>
+          </select>
+      </div>
+      </form>
+      
+      <h3>Location and time</h3>
+      <hr />
+      <h4>Departure location</h4>
+      <input type="text" data-role="text">
+      <h4>Departure time</h4>
+      <input type="date" data-role="date">
+      <input type="time" data-role="time">
+      <h4>Departure mileage</h4>
+      <input type="number" data-role="text">
+      <hr />
+      <h4>Arrival location</h4>
+      <input type="text" data-role="text">
+      <h4>Arrival time</h4>
+      <input type="date" data-role="date">
+      <input type="time" data-role="time">
+      <h4>Arrival mileage</h4>
+      <input type="number" data-role="text">
+      <hr />
+      
+      <input type="submit" value="Log" />
+      
+      <!--<ul data-role="listview" data-inset="true" data-filter="true">
+        <li><a href="#">Acura</a></li>
+        <li><a href="#">Audi</a></li>
+        <li><a href="#">BMW</a></li>
+        <li><a href="#">Cadillac</a></li>
+        <li><a href="#">Ferrari</a></li>
+      </ul>
+      
+      <label for="slider1">Input slider:</label>
+			<input type="range" name="slider1" id="slider1" value="50" min="0" max="100" data-theme="a" />
+			<fieldset data-role="controlgroup"  data-type="horizontal" data-role="fieldcontain">
+			<legend>Cache settings:</legend>
+			<input type="radio" name="radio-choice-a1" id="radio-choice-a1" value="on" checked="checked" />
+			<label for="radio-choice-a1">On</label>
+			<input type="radio" name="radio-choice-a1" id="radio-choice-b1" value="off"  />
+			<label for="radio-choice-b1">Off</label>
+			</fieldset>-->	
+    </div><!-- /content -->
+
+  </div><!-- /page -->
+  <script type="text/javascript" src="js/index.js"></script>
+  <script type="text/javascript">
+      app.initialize();
+  </script>
+</body>
+
+</html>
