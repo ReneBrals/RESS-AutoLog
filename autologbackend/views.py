@@ -8,6 +8,7 @@ from django.template import loader
 from django.db.models.functions import Concat
 from django.db.models import Value as V
 from django.db.models import Max
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Vehicle, Driver, Trip
 
@@ -53,6 +54,7 @@ def log_trip(request):
 	template = loader.get_template('autologbackend/log_trip.html')
 	return HttpResponse(template.render(context,request))
 
+@csrf_exempt
 def submit_log_trip(request):
 	try:
 		selected_vehicle = Vehicle.objects.get(pk=request.POST['vehicle'])
@@ -278,6 +280,23 @@ def vehicles(request, page_nr):
 	context['next_page_nr'] = int(page_nr) + 1 if int(page_nr) < (num_pages - 1) else int(page_nr)
 
 	template = loader.get_template('autologbackend/vehicles.html')
+	return HttpResponse(template.render(context,request))
+
+
+def vehicles_bare(request):
+	context= {}
+	vehs = Vehicle.objects.order_by('license_plate')
+	context['vehicle_list'] = vehs
+
+	template = loader.get_template('autologbackend/vehicles_bare.html')
+	return HttpResponse(template.render(context,request))
+
+def drivers_bare(request):
+	dri = Driver.objects.order_by('name')
+	context = {}
+	context['drivers'] = dri
+
+	template = loader.get_template('autologbackend/drivers_bare.html')
 	return HttpResponse(template.render(context,request))
 
 def delete_vehicle(request, vehicle_id):
