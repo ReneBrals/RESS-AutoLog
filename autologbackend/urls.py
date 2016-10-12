@@ -20,5 +20,7 @@ urlpatterns = [
     url(r'^vehicles_bare/$', views.vehicles_bare, name='vehicles_bare'),
     url(r'^drivers_bare/$', views.drivers_bare, name='drivers_bare'),
     url(r'^delete_vehicle/(?P<vehicle_id>[0-9]+)/$', views.delete_vehicle, name='delete_vehicle'),
+    url(r'^mobile/$', views.mobile, name='mobile'),
+    url(r'^mobile_log/$', views.mobile_log, name='mobile_log'),
 
 ]

@@ -85,7 +85,10 @@ def submit_log_trip(request):
 			arrival_location = geo.location_from_coords(float(request.POST["arrival_location_lat"]),float(request.POST["arrival_location_lon"]))
 
 	except KeyError as e:
-		return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+		if 'm' in request.POST and request.POST['m'] == 'm':
+			return HttpResponseRedirect(reverse('mobile'))
+		else:
+			return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
 	else:
 		trip = Trip(
 			vehicle=selected_vehicle,
@@ -99,7 +102,10 @@ def submit_log_trip(request):
 		)
 		trip.save()
 
-		return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+		if 'm' in request.POST and request.POST['m'] == 'm':
+			return HttpResponseRedirect(reverse('mobile'))
+		else:
+			return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
 
 def edit_trip(request, trip_id):
 	trip = Trip.objects.get(pk=trip_id)
@@ -349,3 +355,19 @@ def delete_vehicle(request, vehicle_id):
 	vehicle.delete()
 
 	return HttpResponseRedirect(reverse('vehicles', kwargs={'page_nr': 0}))
+
+def mobile_log(request):
+	vehicles = Vehicle.objects.order_by('license_plate')
+	drivers = Driver.objects.order_by('name')
+
+	context = {
+		'vehicles' : vehicles,
+		'drivers' : drivers,
+	}
+	template = loader.get_template('autologbackend/mobile_log.html')
+	return HttpResponse(template.render(context,request))
+
+def mobile(request):
+	context = {}
+	template = loader.get_template('autologbackend/mobile.html')
+	return HttpResponse(template.render(context,request))
