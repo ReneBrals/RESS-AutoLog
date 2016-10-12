@@ -85,7 +85,7 @@ def submit_log_trip(request):
 			arrival_location = geo.location_from_coords(float(request.POST["arrival_location_lat"]),float(request.POST["arrival_location_lon"]))
 
 	except KeyError as e:
-		pass
+		return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
 	else:
 		trip = Trip(
 			vehicle=selected_vehicle,
@@ -330,14 +330,14 @@ def vehicles(request, page_nr):
 
 def vehicles_bare(request):
 	context= {}
-	vehs = Vehicle.objects.order_by('license_plate')
+	vehs = Vehicle.objects.all()
 	context['vehicle_list'] = vehs
 
 	template = loader.get_template('autologbackend/vehicles_bare.html')
 	return HttpResponse(template.render(context,request))
 
 def drivers_bare(request):
-	dri = Driver.objects.order_by('name')
+	dri = Driver.objects.all()
 	context = {}
 	context['drivers'] = dri
 
