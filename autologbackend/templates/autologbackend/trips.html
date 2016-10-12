@@ -16,15 +16,6 @@
                 <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="driver" {% if driver_fill %} value={{ driver_fill }} {% endif %}>
             </div>
         </div>
-
-        <div class="col-lg-6">
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">From</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="departure_location" {% if dep_fill %} value={{ dep_fill }} {% endif %}>
-                <span class="input-group-addon" aria-describedby="basic-addon1">To</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="arrival_location" {% if arr_fill %} value={{ arr_fill }} {% endif %}>
-            </div>
-        </div>
     </div>
     <br/>
     <div class="row">
@@ -43,6 +34,27 @@
                 <input type="date" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="begin_date" {% if bdate_fill %} value={{ bdate_fill }} {% endif %}>
                 <span class="input-group-addon" aria-describedby="basic-addon1"> - </span>
                 <input type="date" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="end_date" {% if edate_fill %} value={{ edate_fill }} {% endif %}>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">From</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="departure_location" {% if dep_fill %} value={{ dep_fill }} {% endif %}>
+                <span class="input-group-addon">Within</span>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="fromrange" {% if fromrange_fill %} value={{ fromrange_fill }} {% endif %}>
+                <span class="input-group-addon">km</span>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="input-group">
+                <span class="input-group-addon" id="basic-addon1">To</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="arrival_location" {% if arr_fill %} value={{ arr_fill }} {% endif %}>
+                <span class="input-group-addon">Within</span>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="torange" {% if torange_fill %} value={{ torange_fill }} {% endif %}>
+                <span class="input-group-addon">km</span>
             </div>
         </div>
     </div>
@@ -107,10 +119,10 @@
     	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
     	<td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
     	<td>{{ trip.driver.name }}</td>
-    	<td>{{ trip.departure_location }}</td>
+    	<td>{{ trip.departure_location.description }}</td>
         <td>{{ trip.departure_time }}</td>
         
-        <td>{{ trip.arrival_location }}</td>
+        <td>{{ trip.arrival_location.description }}</td>
         <td>{{ trip.arrival_time }}</td>
         <td>{{ trip.distance }} {{ trip.vehicle.mileage_unit }}</td>
     	<td>{{ trip.departure_mileage }} {{ trip.vehicle.mileage_unit }}</td>

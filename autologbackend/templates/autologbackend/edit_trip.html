@@ -33,7 +33,7 @@
     <hr>
     <div class="form-group">
         <label for="departure_location">Departure location</label>
-        <input class="form-control" type="text" name="departure_location" value="{{ trip.departure_location }}">
+        <input class="form-control" type="text" name="departure_location" value="{{ trip.departure_location.description }}">
     </div>
 
     <div class="form-group">
@@ -50,7 +50,7 @@
     
     <div class="form-group">
         <label for="arrival_location">Arrival location</label>
-        <input class="form-control" type="text" name="arrival_location" value="{{ trip.arrival_location }}">
+        <input class="form-control" type="text" name="arrival_location" value="{{ trip.arrival_location.description }}">
     </div>
 
     <div class="form-group">

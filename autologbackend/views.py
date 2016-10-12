@@ -11,6 +11,7 @@ from django.db.models import Max
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Vehicle, Driver, Trip
+import geo
 
 # Create your views here.
 def index(request):
@@ -73,9 +74,16 @@ def submit_log_trip(request):
 			parse_time(request.POST["arrival_time"])
 			)
 
-		departure_location = request.POST["departure_location"]
+		if 'departure_location' in request.POST:
+			departure_location = geo.location_from_name(request.POST["departure_location"])
+		elif 'departure_location_lat' in request.POST and 'departure_location_lon' in request.POST:
+			departure_location = geo.location_from_coords(float(request.POST["departure_location_lat"]),float(request.POST["departure_location_lon"]))
 
-		arrival_location = request.POST["arrival_location"]
+		if 'arrival_location' in request.POST:
+			arrival_location = geo.location_from_name(request.POST["arrival_location"])
+		elif 'arrival_location_lat' in request.POST and 'arrival_location_lon' in request.POST:
+			arrival_location = geo.location_from_coords(float(request.POST["arrival_location_lat"]),float(request.POST["arrival_location_lon"]))
+
 	except KeyError as e:
 		pass
 	else:
@@ -112,8 +120,17 @@ def submit_edit_trip(request, trip_id):
 
 	trip.vehicle= Vehicle.objects.get(pk=request.POST['vehicle']) 
 	trip.driver = Driver.objects.get(pk=request.POST['driver']) 
-	trip.arrival_location = request.POST['arrival_location']
-	trip.departure_location = request.POST['departure_location']
+	
+	if 'arrival_location' in request.POST:
+		arrival_location = geo.location_from_name(request.POST["arrival_location"])
+	elif 'arrival_location_lat' in request.POST and 'arrival_location_lon' in request.POST:
+		arrival_location = geo.location_from_coords(float(request.POST["arrival_location_lat"]),float(request.POST["arrival_location_lon"]))
+	
+	if 'departure_location' in request.POST:
+		trip.departure_location = geo.location_from_name(request.POST["departure_location"])
+	elif 'departure_location_lat' in request.POST and 'departure_location_lon' in request.POST:
+		trip.departure_location = geo.location_from_coords(float(request.POST["departure_location_lat"]),float(request.POST["departure_location_lon"]))
+	
 	trip.departure_mileage = int(request.POST['departure_mileage'])
 	trip.arrival_mileage = int(request.POST['arrival_mileage'])
 
@@ -196,18 +213,6 @@ def trips(request, page_nr):
 		pass
 
 	try:
-		trips_list = trips_list.filter(departure_location__icontains=request.GET['departure_location'])
-		context['dep_fill'] = request.GET['departure_location']
-	except:
-		pass
-
-	try:
-		trips_list = trips_list.filter(arrival_location__icontains=request.GET['arrival_location'])
-		context['arr_fill'] = request.GET['arrival_location']
-	except:
-		pass
-
-	try:
 		trips_list = trips_list.filter(distance__gte=request.GET['min_dist'])
 		context['mindist_fill'] = request.GET['min_dist']
 	except:
@@ -231,11 +236,51 @@ def trips(request, page_nr):
 	except:
 		pass
 
-	num_pages = trips_list.count()/RESULTS_PER_PAGE
-	if trips_list.count()%RESULTS_PER_PAGE:
-		num_pages += 1
+	if 'arrival_location' in request.GET and request.GET['arrival_location']!='':
+		context['arr_fill'] = request.GET['arrival_location']
+		
+		if request.GET['torange'] == '':
+			rng = 0
+		else:
+			rng = float(request.GET['torange'])
+
+		if rng == 0:
+			
+			trips_list = trips_list.filter(arrival_location__description__icontains=request.GET['arrival_location'])
+
+	if 'departure_location' in request.GET and request.GET['departure_location']!='':
+		if request.GET['fromrange'] == '':
+			rng = 0
+		else:
+			rng = float(request.GET['fromrange'])
+		context['dep_fill'] = request.GET['departure_location']
+		context['fromrange_fill'] = request.GET['fromrange']
+
+		if rng == 0:
+			trips_list = trips_list.filter(departure_location__description__icontains=request.GET['departure_location'])
+		else:
+			loc = geo.location_from_name(request.GET['departure_location'])
+			trips_list = geo.filter_trips_in_range_from(loc, float(rng), trips_list)
+
+	if 'arrival_location' in request.GET and request.GET['arrival_location']!='':
+		if request.GET['torange'] == '':
+			rng = 0
+		else:
+			rng = float(request.GET['torange'])
+		
+		if rng >0:
+			loc = geo.location_from_name(request.GET['arrival_location'])
+			trips_list = geo.filter_trips_in_range_to(loc, rng, trips_list)
 
 
+	if isinstance(trips_list,list):
+		num_pages = len(trips_list)/RESULTS_PER_PAGE
+		if len(trips_list)%RESULTS_PER_PAGE:
+			num_pages += 1
+	else:
+		num_pages = trips_list.count()/RESULTS_PER_PAGE
+		if trips_list.count()%RESULTS_PER_PAGE:
+			num_pages += 1
 
 	context['num_pages'] = num_pages
 	context['page_nr'] = page_nr

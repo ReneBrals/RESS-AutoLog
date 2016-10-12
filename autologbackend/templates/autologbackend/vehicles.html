@@ -51,7 +51,7 @@
     	<td><a href="{% url 'vehicle_detail' veh.id %}">{{ veh.license_plate }}</a></td>
     	<td>{{ veh.vehicle_make }} {{ veh.vehicle_model }}</td>
     	<td>{% if veh.last_trip.driver.name %} {{ veh.last_trip.driver.name }} {% else %} --- {% endif %}</td>
-    	<td>{% if veh.last_trip.arrival_location %} {{ veh.last_trip.arrival_location }} {% else %} --- {% endif %}</td>
+    	<td>{% if veh.last_trip.arrival_location %} {{ veh.last_trip.arrival_location.description }} {% else %} --- {% endif %}</td>
     	<td>{% if veh.last_trip.arrival_time %} {{ veh.last_trip.arrival_time }} {% else %} --- {% endif %}</td>
         <td>{% if veh.last_trip.arrival_mileage %} {{ veh.last_trip.arrival_mileage }} {{ veh.mileage_unit }}{% else %} --- {% endif %}</td>
         <td><a href="{% url 'delete_vehicle' veh.id %}"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></a></td>

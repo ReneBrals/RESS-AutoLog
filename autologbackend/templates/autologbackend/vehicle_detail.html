@@ -27,10 +27,10 @@
     	{% for trip in latest_vehicle_trips %}
     	<tr>
     	<td>{{ trip.driver.name }}</td>
-        <td>{{ trip.departure_location }}</td>
+        <td>{{ trip.departure_location.description }}</td>
     	<td>{{ trip.departure_time }}</td>
     	
-        <td>{{ trip.arrival_location }}</td>
+        <td>{{ trip.arrival_location.description }}</td>
     	<td>{{ trip.arrival_time }}</td>
     	
         <td>{{ trip.distance }}
