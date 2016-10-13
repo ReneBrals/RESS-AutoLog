@@ -54,7 +54,11 @@
     	<td>{% if veh.last_trip.arrival_location %} {{ veh.last_trip.arrival_location.description }} {% else %} --- {% endif %}</td>
     	<td>{% if veh.last_trip.arrival_time %} {{ veh.last_trip.arrival_time }} {% else %} --- {% endif %}</td>
         <td>{% if veh.last_trip.arrival_mileage %} {{ veh.last_trip.arrival_mileage }} {{ veh.mileage_unit }}{% else %} --- {% endif %}</td>
-        <td><a href="{% url 'delete_vehicle' veh.id %}"><span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span></a></td>
+        <td>
+        <a onclick='bootbox.confirm("Are you sure you want to delete this vehicle?", function(result){if(result){confirmbox("{% url 'delete_vehicle' veh.id %}")}})'>
+            <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
+        </a>
+        </td>
     	</tr>
     	{% endfor %}
     </table>
