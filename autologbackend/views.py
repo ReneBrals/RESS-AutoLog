@@ -205,44 +205,39 @@ def trips(request, page_nr):
 
 	context = {}
 
+	context['GET_stuff'] = request.GET
+
 	try:
 		trips_list = trips_list.filter(veh__icontains=request.GET['vehicle'])
-		context['vehicle_fill'] = request.GET['vehicle']
 	except:
 		pass
 
 	try:
 		trips_list = trips_list.filter(driver__name__icontains=request.GET['driver'])
-		context['driver_fill'] = request.GET['driver']
 	except:
 		pass
 
 	try:
 		trips_list = trips_list.filter(distance__gte=request.GET['min_dist'])
-		context['mindist_fill'] = request.GET['min_dist']
 	except:
 		pass
 
 	try:
 		trips_list = trips_list.filter(distance__lte=request.GET['max_dist'])
-		context['maxdist_fill'] = request.GET['max_dist']
 	except:
 		pass
 
 	try:
 		trips_list = trips_list.filter(arrival_time__gte= parse_date(request.GET['begin_date']))
-		context['bdate_fill'] = request.GET['begin_date']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(arrival_time__lte= parse_date(request.GET['end_date']))
-		context['edate_fill'] = request.GET['end_date']
+		trips_list = trips_list.filter(arrival_time__lte= parse_date(request.GET['end_date'])+ datetime.timedelta(days=1))
 	except:
 		pass
 
 	if 'arrival_location' in request.GET and request.GET['arrival_location']!='':
-		context['arr_fill'] = request.GET['arrival_location']
 		
 		if request.GET['torange'] == '':
 			rng = 0
@@ -258,8 +253,6 @@ def trips(request, page_nr):
 			rng = 0
 		else:
 			rng = float(request.GET['fromrange'])
-		context['dep_fill'] = request.GET['departure_location']
-		context['fromrange_fill'] = request.GET['fromrange']
 
 		if rng == 0:
 			trips_list = trips_list.filter(departure_location__description__icontains=request.GET['departure_location'])
