@@ -190,7 +190,6 @@ def submit_register_vehicle(request):
 			build_year = build_year,
 			vehicle_make = make,
 			vehicle_model = model,
-			mileage= mileage,
 			mileage_unit = mileage_unit
 		)
 
@@ -333,6 +332,32 @@ def vehicles(request, page_nr):
 	template = loader.get_template('autologbackend/vehicles.html')
 	return HttpResponse(template.render(context,request))
 
+def drivers(request, page_nr):
+	RESULTS_PER_PAGE = 20
+
+	context= {}
+	
+
+	dris = Driver.objects.order_by('name')
+	num_pages = dris.count()/RESULTS_PER_PAGE
+	if dris.count()%RESULTS_PER_PAGE:
+		num_pages += 1
+	for e in dris:
+		try:
+		    e.last_trip = Trip.objects.filter(driver=e).order_by('-arrival_time')[0]
+		except:
+			pass
+
+
+	context['driver_list'] = dris
+	context['page_nr'] = page_nr
+	context['num_pages'] = num_pages
+	context['prev_page_nr'] = 0 if int(page_nr) == 0 else int(page_nr) - 1
+	context['next_page_nr'] = int(page_nr) + 1 if int(page_nr) < (num_pages - 1) else int(page_nr)
+
+	template = loader.get_template('autologbackend/drivers.html')
+	return HttpResponse(template.render(context,request))
+
 
 def vehicles_bare(request):
 	context= {}
@@ -353,8 +378,13 @@ def drivers_bare(request):
 def delete_vehicle(request, vehicle_id):
 	vehicle = Vehicle.objects.get(pk=vehicle_id)
 	vehicle.delete()
-
 	return HttpResponseRedirect(reverse('vehicles', kwargs={'page_nr': 0}))
+
+def delete_driver(request, driver_id):
+	vehicle = Vehicle.objects.get(pk=vehicle_id)
+	vehicle.delete()
+
+	return HttpResponseRedirect(reverse('drivers', kwargs={'page_nr': 0}))
 
 def mobile_log(request):
 	vehicles = Vehicle.objects.order_by('license_plate')
@@ -370,4 +400,21 @@ def mobile_log(request):
 def mobile(request):
 	context = {}
 	template = loader.get_template('autologbackend/mobile.html')
+	return HttpResponse(template.render(context,request))
+
+def driver_detail(request, driver_id):
+	driver = Driver.objects.get(pk=driver_id)
+	latest_vehicle_trips = Trip.objects.filter(driver=driver).order_by('-arrival_time').annotate(distance=F('arrival_mileage')-F('departure_mileage'))[:15]
+
+	last_trip = latest_vehicle_trips[0]
+
+
+	context = {
+		'driver': driver,
+		'latest_vehicle_trips': latest_vehicle_trips,
+		'last_trip' : last_trip,
+	}
+
+	template = loader.get_template('autologbackend/driver_detail.html')
+
 	return HttpResponse(template.render(context,request))

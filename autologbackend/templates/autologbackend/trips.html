@@ -118,7 +118,7 @@
     	<tr>
     	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
     	<td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
-    	<td>{{ trip.driver.name }}</td>
+    	<td><a href="{% url 'driver_detail' trip.driver.id %}">{{ trip.driver.name }}</td>
     	<td>{{ trip.departure_location.description }}</td>
         <td>{{ trip.departure_time }}</td>
         

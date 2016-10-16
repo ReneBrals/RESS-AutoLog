@@ -1,20 +1,18 @@
 {% extends 'autologbackend/base.html' %}
 {% block content %}
-<h1> {{ vehicle.license_plate }}: {{ vehicle.build_year }} {{ vehicle.vehicle_make }} {{ vehicle.vehicle_model }}</h1>
+<h1> {{ driver.name }}</h1>
 <table class="table table-striped">
-<tr><td>Mileage</td><td>{{ last_trip.arrival_mileage }} {{ vehicle.mileage_unit }}</td></tr>
-<tr><td>Last Driver</td><td>{{ last_trip.driver.name }}</td></tr>
+<tr><td>Last Driven Vehicle</td><td>{{ last_trip.driver.name }}</td></tr>
 <tr><td>Last Known Location</td><td>{{ last_trip.arrival_location.description }}</td></tr>
 </table>
 
 
 <h3> Latest trips </h3>
 {% if latest_vehicle_trips %}
-	
-
     <table class="table table-striped">
 		<tr>
-    		<th>Driver</th> 
+    		<th>Vehicle</th> 
+            <th></th>
     		<th>From</th>
     		<th></th>
     		<th>To</th>
@@ -26,7 +24,8 @@
 
     	{% for trip in latest_vehicle_trips %}
     	<tr>
-    	<td><a href="{% url 'driver_detail' trip.driver.id %}">{{ trip.driver.name }}</a></td>
+    	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
+        <td> {{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }} </td>
         <td>{{ trip.departure_location.description }}</td>
     	<td>{{ trip.departure_time }}</td>
     	
@@ -36,11 +35,10 @@
         <td>{{ trip.distance }}
     	<td>{{ trip.departure_mileage }}</td>
     	<td>{{ trip.arrival_mileage }}</td>
-
     	</tr>
     	{% endfor %}
     </table>
-    <a href="{% url 'trips' 0 %}?vehicle={{ vehicle.license_plate }}" class="btn btn-info" role="button"> View All Trips </a>
+    <a href="{% url 'trips' 0 %}?driver={{ driver.name }}" class="btn btn-info" role="button"> View All Trips </a>
 {% else %}
     <p>No trips are available.</p>
 {% endif %}
