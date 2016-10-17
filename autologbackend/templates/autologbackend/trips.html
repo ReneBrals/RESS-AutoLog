@@ -194,9 +194,15 @@
 
             $("#trip_table").DataTable( {
                 dom: 'Bfrtip',
+                lengthMenu: [
+                    [ 10, 25, 50, -1 ],
+                    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                ],
+
                 buttons: [
-                    'copy', 'csv', 'excel', 
+                    'pageLength', {extend: 'csvHtml5', text:'Export to CSV'}, {extend:'excelHtml5',text:'Export to Excel'}, 
                     { extend: 'pdfHtml5',
+                    text:'Export to PDF',
                     orientation: 'landscape',
                     pageSize: 'A4',
                     download: 'open',
@@ -207,6 +213,7 @@
                 { targets: 10, orderable: false},
                 { targets: [7,8,9], "type": "number_with_unit"}
                 ],
+                
                 "searching": false,
                 "order": [[ 6, "desc" ]],
                 "footerCallback": function ( row, data, start, end, display ) {
