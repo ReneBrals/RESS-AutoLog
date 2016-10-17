@@ -70,113 +70,143 @@
 
 {% if trips_list %}
 
-    <table class="table table-striped" id="trip_table">
-		<thead>
-    		<th>Vehicle</th>
-    		<th>Vehicle Name</td>
-    		<th>Driver</th> 
-    		<th>From</th>
-            <th>Departure Time</th>
-            <th>To</th>
-            <th>Arrival Time</th>
-            <th>Distance</th>
-            <th>Mileage dep.</th>
-    		<th>Mileage arr.</th>
-            <th></th>
-  		</thead>
-        <tbody
-    	{% for trip in trips_list %}
-    	<tr>
-    	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
-    	<td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
-    	<td><a href="{% url 'driver_detail' trip.driver.id %}">{{ trip.driver.name }}</td>
-    	<td>{{ trip.departure_location.description }}</td>
-        <td>{{ trip.departure_time }}</td>
-        
-        <td>{{ trip.arrival_location.description }}</td>
-        <td>{{ trip.arrival_time }}</td>
-        <td>{{ trip.distance }} {{ trip.vehicle.mileage_unit }}</td>
-    	<td>{{ trip.departure_mileage }} {{ trip.vehicle.mileage_unit }}</td>
-    	<td>{{ trip.arrival_mileage }} {{ trip.vehicle.mileage_unit }}</td>
-        <td>
+<table class="table table-striped" id="trip_table">
+  <thead>
+      <th>Vehicle</th>
+      <th>Vehicle Name</td>
+          <th>Driver</th> 
+          <th>From</th>
+          <th>Departure Time</th>
+          <th>To</th>
+          <th>Arrival Time</th>
+          <th>Distance</th>
+          <th>Mileage dep.</th>
+          <th>Mileage arr.</th>
+          <th></th>
+      </thead>
+
+        <tfoot>
+            <tr>
+                <th colspan="7" style="text-align:right">Total Distance:</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </tfoot>
+
+      <tbody
+      {% for trip in trips_list %}
+      <tr>
+       <td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
+       <td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
+       <td><a href="{% url 'driver_detail' trip.driver.id %}">{{ trip.driver.name }}</td>
+       <td>{{ trip.departure_location.description }}</td>
+       <td>{{ trip.departure_time }}</td>
+
+       <td>{{ trip.arrival_location.description }}</td>
+       <td>{{ trip.arrival_time }}</td>
+       <td>{{ trip.distance }} {{ trip.vehicle.mileage_unit }}</td>
+       <td>{{ trip.departure_mileage }} {{ trip.vehicle.mileage_unit }}</td>
+       <td>{{ trip.arrival_mileage }} {{ trip.vehicle.mileage_unit }}</td>
+       <td>
         <a href="{% url 'edit_trip' trip.pk %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
         <a onclick='bootbox.confirm("Are you sure you want to delete this entry?", function(result){if(result){confirmbox("{% url 'delete_trip' trip.pk %}")}})'>
             <span class="glyphicon glyphicon-floppy-remove" aria-hidden="true"></span>
         </a>
-        </td>
+    </td>
 
-    	</tr>
-    	{% endfor %}
-        </tbody>
-    </table>
+</tr>
+{% endfor %}
+</tbody>
+</table>
 {% else %}
-    <p>No trips are available.</p>
+<p>No trips are available.</p>
 {% endif %}
 
 <script type="text/javascript">
-$(document).ready(function() {
-    $(function () {
-        $("#begin_date").datetimepicker({
-            useCurrent: false,
-            format: "DD-MM-YYYY",
-            calendarWeeks: true });
-        $("#end_date").datetimepicker({
-            useCurrent: false,
-            format: "DD-MM-YYYY",
-            calendarWeeks: true });
+    $(document).ready(function() {
+        $(function () {
+            $("#begin_date").datetimepicker({
+                useCurrent: false,
+                format: "DD-MM-YYYY",
+                calendarWeeks: true 
+            });
+            
+            $("#end_date").datetimepicker({
+                useCurrent: false,
+                format: "DD-MM-YYYY",
+                calendarWeeks: true 
+            });
 
-        $("#begin_date").on("dp.change", function (e) {
-            $("#end_date").data("DateTimePicker").minDate(e.date);
-        });
+            $("#begin_date").on("dp.change", function (e) {
+                $("#end_date").data("DateTimePicker").minDate(e.date);
+            });
 
-        $("#end_date").on("dp.change", function (e) {
-            $("#begin_date").data("DateTimePicker").maxDate(e.date);
-        });
+            $("#end_date").on("dp.change", function (e) {
+                $("#begin_date").data("DateTimePicker").maxDate(e.date);
+            });
 
-        //Simplify the GET parameters by filtering out the empty ones
-        $("#filterform").submit(function() {
-            $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled"); //if a field is empty, !this.value will return true and it will get a disabled tag
-            return true;
-        });
+            //Simplify the GET parameters by filtering out the empty ones
+            $("#filterform").submit(function() {
+                $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled"); //if a field is empty, !this.value will return true and it will get a disabled tag
+                return true;
+            });
 
-        $("#trip_table").DataTable( {
-            columnDefs: [
+            $("#trip_table").DataTable( {
+                columnDefs: [
                 { targets: 10, orderable: false},
                 { targets: [7,8,9], "type": "number_with_unit"}
-            ],
-            "searching": false,
-            "order": [[ 6, "desc" ]]
-             }
-            //"columns": [
-            //{"name": "license_plate", "orderable": "true"},
-            //{"name": "vehicle_name", "orderable": "true"},
-            //{"name": "driver", "orderable": "true"},
-            //{"name": "from", "orderable": "true"},
-            //{"name": "fromtime", "orderable": "true"},
-            //{"name": "to", "orderable": "true"},
-            //{"name": "totime", "orderable": "true"},
-            //{"name": "dist", "orderable": "true"},
-            //{"name": "mileagedep", "orderable": "true"},
-            //{"name": "mileagearr", "orderable": "true"},
-            //{"name": "editdelete", "orderable": "false"}]
-        );
+                ],
+                "searching": false,
+                "order": [[ 6, "desc" ]],
+                "footerCallback": function ( row, data, start, end, display ) {
+                    var api = this.api(), data;
+ 
+                    var kmVal = function ( i ) {
+                        if (typeof i === 'string'){
+                            return i.replace(' km', '')*1;
+                        } else if (typeof i === 'number') {
+                            return i;
+                        } else {
+                            return 0;
+                        }
+                    };
+ 
+                    //Total of all pages
+                    total = api.column( 7 ).data().reduce( function (a, b) {
+                        return kmVal(a) + kmVal(b);
+                    }, 0 );
+ 
+                    //Total of page
+                    total_page = api.column( 7, { page: 'current'} ).data().reduce( function (a, b) {
+                        return kmVal(a) + kmVal(b);
+                    }, 0 );
+ 
+                    // Update footer
+                    $( api.column( 7 ).footer() ).html(
+                        total_page +' km ( '+ total +' km total)'
+                    );
+                }
+            });
+        });
     });
-});
 
-jQuery.extend( jQuery.fn.dataTableExt.oSort, {
-    "number_with_unit-pre": function ( a ) {
-        a = (a==="-") ? 0 : a.replace( /[^\d\-\.]/g, "" );
-        return parseFloat( a );
-    },
+    jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+        "number_with_unit-pre": function ( a ) {
+            a = (a==="-") ? 0 : a.replace( /[^\d\-\.]/g, "" );
+            return parseFloat( a );
+        },
 
-    "number_with_unit-asc": function ( a, b ) {
-        return a - b;
-    },
+        "number_with_unit-asc": function ( a, b ) {
+            return a - b;
+        },
 
-    "numbers_with_unit-desc": function ( a, b ) {
-        return b - a;
-    }
-} );
+        "numbers_with_unit-desc": function ( a, b ) {
+            return b - a;
+        }
+    });
+
 </script>
 
 {% endblock %}
