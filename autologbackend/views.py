@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.utils.dateparse import *
@@ -9,6 +10,8 @@ from django.db.models.functions import Concat
 from django.db.models import Value as V
 from django.db.models import Max
 from django.views.decorators.csrf import csrf_exempt
+
+
 
 from .models import Vehicle, Driver, Trip
 import geo
@@ -64,15 +67,21 @@ def submit_log_trip(request):
 		departure_mileage = int(request.POST['departure_mileage'])
 		arrival_mileage = int(request.POST['arrival_mileage'])
 
-		departure_time = datetime.datetime.combine(
-			parse_date(request.POST["departure_date"]),
-			parse_time(request.POST["departure_time"])
+		if "departure_date" in request.POST and "departure_time" in request.POST:
+			departure_time = datetime.datetime.combine(
+				parse_date(request.POST["departure_date"]),
+				parse_time(request.POST["departure_time"])
 			)
+		else:
+			departure_time = datetime.parse_datetime(request.POST["departure_datetime"])
 
-		arrival_time = datetime.datetime.combine(
-			parse_date(request.POST["arrival_date"]),
-			parse_time(request.POST["arrival_time"])
+		if "arrival_date" in request.POST and "arrival_time" in request.POST:
+			arrival_time = datetime.datetime.combine(
+				parse_date(request.POST["arrival_date"]),
+				parse_time(request.POST["arrival_time"])
 			)
+		else:
+			arrival_time = datetime.parse_datetime(request.POST["arrival_datetime"])
 
 		if 'departure_location' in request.POST:
 			departure_location = geo.location_from_name(request.POST["departure_location"])
@@ -204,8 +213,6 @@ def trips(request, page_nr):
 	trips_list = trips_list.annotate(veh=Concat('vehicle__license_plate', V(' '), 'vehicle__vehicle_make', V(' '), 'vehicle__vehicle_model'))
 
 	context = {}
-
-	context['GET_stuff'] = request.GET
 
 	try:
 		trips_list = trips_list.filter(veh__icontains=request.GET['vehicle'])

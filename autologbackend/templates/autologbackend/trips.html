@@ -7,13 +7,13 @@
         <div class="col-lg-3">
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Vehicle</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="vehicle" {% if GET_stuff.vehicle %} value={{ GET_stuff.vehicle }} {% endif %}>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="vehicle" {% if request.GET.vehicle %} value="{{ request.GET.vehicle }}" {% endif %}>
             </div>
         </div>
         <div class="col-lg-3">
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Driver</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="driver" {% if GET_stuff.driver %} value={{ GET_stuff.driver }} {% endif %}>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="driver" {% if request.GET.driver %} value="{{ request.GET.driver }}" {% endif %}>
             </div>
         </div>
     </div>
@@ -22,18 +22,18 @@
         <div class="col-lg-6">
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Distance</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" placeholder="min. distance" name="min_dist" {% if GET_stuff.min_dist %} value={{ GET_stuff.min_dist }} {% endif %}>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" placeholder="min. distance" name="min_dist" {% if request.GET.min_dist %} value="{{ request.GET.min_dist }}" {% endif %}>
                 <span class="input-group-addon" aria-describedby="basic-addon1"> - </span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" placeholder="max. distance" name="max_dist" {% if GET_stuff.max_dist %} value={{ GET_stuff.max_dist }} {% endif %}>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" placeholder="max. distance" name="max_dist" {% if request.GET.max_dist %} value="{{ request.GET.max_dist }}" {% endif %}>
             </div>
         </div>
 
         <div class="col-lg-6">
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Date Range</span>
-                <input type="date" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="begin_date" {% if GET_stuff.begin_date %} value={{ GET_stuff.begin_date }} {% endif %}>
+                <input type='text' class="form-control" name="begin_date" id="begin_date" aria-describedby="basic-addon1" {% if request.GET.begin_date %} value="{{ GET_stuff.begin_date }}" {% endif %}/>
                 <span class="input-group-addon" aria-describedby="basic-addon1"> - </span>
-                <input type="date" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="end_date" {% if GET_stuff.end_date %} value={{ GET_stuff.end_date }} {% endif %}>
+                <input type="text" class="form-control" name="end_date" id="end_date" aria-describedby="basic-addon1"  {% if request.GET.end_date %} value="{{ GET_stuff.end_date }}" {% endif %}>
             </div>
         </div>
     </div>
@@ -41,19 +41,19 @@
     <div class="row">
         <div class="col-lg-6">
             <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">From</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="departure_location" {% if GET_stuff.departure_location %} value={{ GET_stuff.departure_location }} {% endif %}>
+                <span class="input-group-addon" id="basic-addon1">From Location</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="departure_location" {% if request.GET.departure_location %} value="{{ request.GET.departure_location }}" {% endif %}>
                 <span class="input-group-addon">Within</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="fromrange" {% if GET_stuff.fromrange %} value={{ GET_stuff.fromrange }} {% endif %}>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="fromrange" {% if request.GET.fromrange %} value="{{ request.GET.fromrange }}" {% endif %}>
                 <span class="input-group-addon">km</span>
             </div>
         </div>
         <div class="col-lg-6">
             <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">To</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="arrival_location" {% if GET_stuff.arrival_location %} value={{ GET_stuff.arrival_location }} {% endif %}>
+                <span class="input-group-addon" id="basic-addon1">To Location</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="arrival_location" {% if request.GET.arrival_location %} value="{{ request.GET.arrival_location }}" {% endif %}>
                 <span class="input-group-addon">Within</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="torange" {% if GET_stuff.torange %} value={{ GET_stuff.torange }} {% endif %}>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="torange" {% if request.GET.torange %} value="{{ request.GET.torange }}" {% endif %}>
                 <span class="input-group-addon">km</span>
             </div>
         </div>
@@ -169,5 +169,28 @@
     </li>
   </ul>
 </nav>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $(function () {
+        $("#begin_date").datetimepicker({
+            useCurrent: false,
+            format: "DD-MM-YYYY",
+            calendarWeeks: true });
+        $("#end_date").datetimepicker({
+            useCurrent: false,
+            format: "DD-MM-YYYY",
+            calendarWeeks: true });
+
+        $("#begin_date").on("dp.change", function (e) {
+            $("#end_date").data("DateTimePicker").minDate(e.date);
+        });
+
+        $("#end_date").on("dp.change", function (e) {
+            $("#begin_date").data("DateTimePicker").maxDate(e.date);
+        });
+    });
+});
+</script>
 
 {% endblock %}

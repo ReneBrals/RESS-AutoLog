@@ -32,8 +32,12 @@
     </div>
     <div class="form-group">
         <label for="departure_date">Departure time</label>
-        <input class="form-control" type="date" name ="departure_date">
-        <input class="form-control" type="time" name ="departure_time">
+        <div class='input-group date' id='departure_datetime'>
+            <input type='text' class="form-control" name="departure_date" />
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
     </div>
     
     <div class="form-group">
@@ -47,9 +51,16 @@
     </div>
     <div class="form-group">
         <label for="arrival_date">Arrival time</label>
-        <input class="form-control" type="date" name ="arrival_date">
-        <input class="form-control" type="time" name ="arrival_time">
+        <div class="form-group">
+                <div class='input-group date' id='arrival_datetime'>
+                    <input type='text' class="form-control" name="arrival_date" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
     </div>
+
     <div class="form-group">
         <label for="arrival_milage">Arrival milage</label>
         <input class="form-control" type="number" name="arrival_mileage">
@@ -57,4 +68,18 @@
     <input class="form-control btn-primary" type="submit" value="Log" />
     </div>
 </form>
+<script type="text/javascript">
+            $(function () {
+                $('#departure_datetime').datetimepicker();
+            });
+            $(function () {
+                $('#arrival_datetime').datetimepicker();
+            });
+            $("#departure_datetime").on("dp.change", function (e) {
+                $('#arrival_datetime').data("DateTimePicker").minDate(e.date);
+            });
+            $("#arrival_datetime").on("dp.change", function (e) {
+                $('#departure_datetime').data("DateTimePicker").maxDate(e.date);
+            });
+</script>
 {% endblock %}
