@@ -2,7 +2,7 @@
 {% load extras %}
 {% block content %}
 <h3> Logged trips </h3>
-<form action="{% url 'trips' 0 %}" method="GET">
+<form action="{% url 'trips' 0 %}" method="GET" id="filterform">
     <div class="row">
         <div class="col-lg-3">
             <div class="input-group">
@@ -31,9 +31,9 @@
         <div class="col-lg-6">
             <div class="input-group">
                 <span class="input-group-addon" id="basic-addon1">Date Range</span>
-                <input type='text' class="form-control" name="begin_date" id="begin_date" aria-describedby="basic-addon1" {% if request.GET.begin_date %} value="{{ GET_stuff.begin_date }}" {% endif %}/>
+                <input type='text' class="form-control" name="begin_date" id="begin_date" aria-describedby="basic-addon1" {% if request.GET.begin_date %} value="{{ request.GET.begin_date }}" {% endif %}/>
                 <span class="input-group-addon" aria-describedby="basic-addon1"> - </span>
-                <input type="text" class="form-control" name="end_date" id="end_date" aria-describedby="basic-addon1"  {% if request.GET.end_date %} value="{{ GET_stuff.end_date }}" {% endif %}>
+                <input type="text" class="form-control" name="end_date" id="end_date" aria-describedby="basic-addon1"  {% if request.GET.end_date %} value="{{ request.GET.end_date }}" {% endif %}>
             </div>
         </div>
     </div>
@@ -188,6 +188,12 @@ $(document).ready(function() {
 
         $("#end_date").on("dp.change", function (e) {
             $("#begin_date").data("DateTimePicker").maxDate(e.date);
+        });
+
+        //Simplify the GET parameters by filtering out the empty ones
+        $("#filterform").submit(function() {
+            $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled"); //if a field is empty, !this.value will return true and it will get a disabled tag
+            return true;
         });
     });
 });
