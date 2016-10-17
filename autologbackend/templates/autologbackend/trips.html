@@ -2,7 +2,7 @@
 {% load extras %}
 {% block content %}
 <h3> Logged trips </h3>
-<form action="{% url 'trips' 0 %}" method="GET" id="filterform">
+<form action="{% url 'trips' %}" method="GET" id="filterform">
     <div class="row">
         <div class="col-lg-3">
             <div class="input-group">
@@ -61,59 +61,30 @@
     <br/>
     <button type="submit" class="btn btn-success">Filter</button>
 
-    <a href="{%url 'trips' 0 %}" class="btn btn-warning"> Clear Filters</a>
+    <a href="{%url 'trips' %}" class="btn btn-warning"> Clear Filters</a>
     <a href="{%url 'log_trip' %}" class="btn btn-primary"> Log a Trip</a>
 
 </form>
-
-<nav aria-label="Page navigation">
-  <ul class="pagination">
-    <li>
-      <a href="{% url 'trips' prev_page_nr %}{% GET_string %}" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    {% if num_pages > 5 %}
-    <li><a href="{% url 'trips' 0 %}{% GET_string %}">1</a></li>
-    <li><a href="{% url 'trips' 1 %}{% GET_string %}">2</a></li>
-    <li><a href="{% url 'trips' 2 %}{% GET_string %}">3</a></li>
-
-    <li><a href="{% url 'trips' num_pages|add:"-2" %}{% GET_string %}">{{ num_pages|add:"-1" }}</a></li>
-    <li><a href="{% url 'trips' num_pages|add:"-1" %}{% GET_string %}">{{ num_pages }}</a></li>
-    {% else %}
-    {% with ''|center:num_pages as range %}
-    {% for _ in range %}
-        <li><a href="{% url 'trips' forloop.counter0 %}{% GET_string %}">{{ forloop.counter }}</a></li>
-    {% endfor %}
-    {% endwith %}
-    {% endif %}
-    <li>
-        <a href="{% url 'trips' next_page_nr %}{% GET_string %}" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-        </a>
-    </li>
-  </ul>
-</nav>
 
 <br/>
 
 {% if trips_list %}
 
-    <table class="table table-striped">
-		<tr>
+    <table class="table table-striped" id="trip_table">
+		<thead>
     		<th>Vehicle</th>
-    		<td></td>
+    		<th>Vehicle Name</td>
     		<th>Driver</th> 
     		<th>From</th>
-            <th></th>
+            <th>Departure Time</th>
             <th>To</th>
-            <th></th>
+            <th>Arrival Time</th>
             <th>Distance</th>
             <th>Mileage dep.</th>
     		<th>Mileage arr.</th>
             <th></th>
-  		</tr>
-
+  		</thead>
+        <tbody
     	{% for trip in trips_list %}
     	<tr>
     	<td><a href="{% url 'vehicle_detail' trip.vehicle.id %}">{{ trip.vehicle.license_plate }}</a></td>
@@ -136,39 +107,11 @@
 
     	</tr>
     	{% endfor %}
+        </tbody>
     </table>
 {% else %}
     <p>No trips are available.</p>
 {% endif %}
-
-<nav aria-label="Page navigation">
-  <ul class="pagination">
-    <li>
-      <a href="{% url 'trips' prev_page_nr %}" aria-label="Previous">
-        <span aria-hidden="true">&laquo;</span>
-      </a>
-    </li>
-    {% if num_pages > 5 %}
-    <li><a href="{% url 'trips' 0 %}">1</a></li>
-    <li><a href="{% url 'trips' 1 %}">2</a></li>
-    <li><a href="{% url 'trips' 2 %}">3</a></li>
-
-    <li><a href="{% url 'trips' num_pages|add:"-2" %}">{{ num_pages|add:"-1" }}</a></li>
-    <li><a href="{% url 'trips' num_pages|add:"-1" %}">{{ num_pages }}</a></li>
-    {% else %}
-    {% with ''|center:num_pages as range %}
-    {% for _ in range %}
-        <li><a href="{% url 'trips' forloop.counter0 %}">{{ forloop.counter }}</a></li>
-    {% endfor %}
-    {% endwith %}
-    {% endif %}
-    <li>
-        <a href="{% url 'trips' next_page_nr %}" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-        </a>
-    </li>
-  </ul>
-</nav>
 
 <script type="text/javascript">
 $(document).ready(function() {
@@ -195,8 +138,45 @@ $(document).ready(function() {
             $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled"); //if a field is empty, !this.value will return true and it will get a disabled tag
             return true;
         });
+
+        $("#trip_table").DataTable( {
+            columnDefs: [
+                { targets: 10, orderable: false},
+                { targets: [7,8,9], "type": "number_with_unit"}
+            ],
+            "searching": false,
+            "order": [[ 6, "desc" ]]
+             }
+            //"columns": [
+            //{"name": "license_plate", "orderable": "true"},
+            //{"name": "vehicle_name", "orderable": "true"},
+            //{"name": "driver", "orderable": "true"},
+            //{"name": "from", "orderable": "true"},
+            //{"name": "fromtime", "orderable": "true"},
+            //{"name": "to", "orderable": "true"},
+            //{"name": "totime", "orderable": "true"},
+            //{"name": "dist", "orderable": "true"},
+            //{"name": "mileagedep", "orderable": "true"},
+            //{"name": "mileagearr", "orderable": "true"},
+            //{"name": "editdelete", "orderable": "false"}]
+        );
     });
 });
+
+jQuery.extend( jQuery.fn.dataTableExt.oSort, {
+    "number_with_unit-pre": function ( a ) {
+        a = (a==="-") ? 0 : a.replace( /[^\d\-\.]/g, "" );
+        return parseFloat( a );
+    },
+
+    "number_with_unit-asc": function ( a, b ) {
+        return a - b;
+    },
+
+    "numbers_with_unit-desc": function ( a, b ) {
+        return b - a;
+    }
+} );
 </script>
 
 {% endblock %}

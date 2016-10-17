@@ -205,7 +205,7 @@ def submit_register_vehicle(request):
 		vehicle.save()
 		return HttpResponseRedirect(reverse('index'))
 
-def trips(request, page_nr):
+def trips(request):
 	RESULTS_PER_PAGE = 20
 
 	trips_list = Trip.objects.order_by('-arrival_time')
@@ -277,24 +277,6 @@ def trips(request, page_nr):
 			loc = geo.location_from_name(request.GET['arrival_location'])
 			trips_list = geo.filter_trips_in_range_to(loc, rng, trips_list)
 
-
-	if isinstance(trips_list,list):
-		num_pages = len(trips_list)/RESULTS_PER_PAGE
-		if len(trips_list)%RESULTS_PER_PAGE:
-			num_pages += 1
-	else:
-		num_pages = trips_list.count()/RESULTS_PER_PAGE
-		if trips_list.count()%RESULTS_PER_PAGE:
-			num_pages += 1
-
-	context['num_pages'] = num_pages
-	context['page_nr'] = page_nr
-	context['prev_page_nr'] = 0 if int(page_nr) == 0 else int(page_nr) - 1
-	context['next_page_nr'] = int(page_nr) + 1 if int(page_nr) < (num_pages - 1) else int(page_nr)
-
-	if int(page_nr) < num_pages:
-		trips_list = trips_list[int(page_nr)*RESULTS_PER_PAGE:(int(page_nr)+1)*RESULTS_PER_PAGE]
-
 	context['trips_list'] = trips_list
 
 
@@ -304,7 +286,7 @@ def trips(request, page_nr):
 def delete_trip(request,trip_id):
 	Trip.objects.get(pk=trip_id).delete()
 
-	return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+	return HttpResponseRedirect(reverse('trips'))
 
 def vehicles(request, page_nr):
 	RESULTS_PER_PAGE = 20

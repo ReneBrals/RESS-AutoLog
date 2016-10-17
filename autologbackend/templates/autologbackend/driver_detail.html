@@ -38,7 +38,7 @@
     	</tr>
     	{% endfor %}
     </table>
-    <a href="{% url 'trips' 0 %}?driver={{ driver.name }}" class="btn btn-info" role="button"> View All Trips </a>
+    <a href="{% url 'trips' %}?driver={{ driver.name }}" class="btn btn-info" role="button"> View All Trips </a>
 {% else %}
     <p>No trips are available.</p>
 {% endif %}
