@@ -2,58 +2,61 @@
 {% load extras %}
 {% block content %}
 <h3> Logged trips </h3>
+<div class="panel panel-default">
+  <div class="panel-body">
 <form action="{% url 'trips' %}" method="GET" id="filterform">
+
     <div class="row">
-        <div class="col-lg-3">
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Vehicle</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="vehicle" {% if request.GET.vehicle %} value="{{ request.GET.vehicle }}" {% endif %}>
+        <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon " id="basic-addon1">Vehicle</span>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="vehicle" {% if request.GET.vehicle %} value="{{ request.GET.vehicle }}" {% endif %}>
             </div>
         </div>
-        <div class="col-lg-3">
-            <div class="input-group">
+        <div class="col-sm-3">
+            <div class="input-group input-group-sm">
                 <span class="input-group-addon" id="basic-addon1">Driver</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="driver" {% if request.GET.driver %} value="{{ request.GET.driver }}" {% endif %}>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="driver" {% if request.GET.driver %} value="{{ request.GET.driver }}" {% endif %}>
             </div>
         </div>
     </div>
     <br/>
     <div class="row">
-        <div class="col-lg-6">
-            <div class="input-group">
-                <span class="input-group-addon" id="basic-addon1">Distance</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" placeholder="min. distance" name="min_dist" {% if request.GET.min_dist %} value="{{ request.GET.min_dist }}" {% endif %}>
-                <span class="input-group-addon" aria-describedby="basic-addon1"> - </span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" placeholder="max. distance" name="max_dist" {% if request.GET.max_dist %} value="{{ request.GET.max_dist }}" {% endif %}>
+        <div class="col-sm-6">
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon" id="sizing-addon3">Distance</span>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="sizing-addon3" placeholder="min. distance" name="min_dist" {% if request.GET.min_dist %} value="{{ request.GET.min_dist }}" {% endif %}>
+                <span class="input-group-addon" aria-describedby="sizing-addon3"> - </span>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="sizing-addon3" placeholder="max. distance" name="max_dist" {% if request.GET.max_dist %} value="{{ request.GET.max_dist }}" {% endif %}>
             </div>
         </div>
 
-        <div class="col-lg-6">
-            <div class="input-group">
+        <div class="col-sm-6">
+            <div class="input-group input-group-sm">
                 <span class="input-group-addon" id="basic-addon1">Date Range</span>
-                <input type='text' class="form-control" name="begin_date" id="begin_date" aria-describedby="basic-addon1" {% if request.GET.begin_date %} value="{{ request.GET.begin_date }}" {% endif %}/>
+                <input type='text' class="form-control" name="begin_date" id="begin_date" aria-describedby="sizing-addon3" {% if request.GET.begin_date %} value="{{ request.GET.begin_date }}" {% endif %}/>
                 <span class="input-group-addon" aria-describedby="basic-addon1"> - </span>
-                <input type="text" class="form-control" name="end_date" id="end_date" aria-describedby="basic-addon1"  {% if request.GET.end_date %} value="{{ request.GET.end_date }}" {% endif %}>
+                <input type="text" class="form-control" name="end_date" id="end_date" aria-describedby="sizing-addon3"  {% if request.GET.end_date %} value="{{ request.GET.end_date }}" {% endif %}>
             </div>
         </div>
     </div>
     <br/>
     <div class="row">
-        <div class="col-lg-6">
-            <div class="input-group">
+        <div class="col-sm-6">
+            <div class="input-group input-group-sm">
                 <span class="input-group-addon" id="basic-addon1">From Location</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="departure_location" {% if request.GET.departure_location %} value="{{ request.GET.departure_location }}" {% endif %}>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="departure_location" {% if request.GET.departure_location %} value="{{ request.GET.departure_location }}" {% endif %}>
                 <span class="input-group-addon">Within</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="fromrange" {% if request.GET.fromrange %} value="{{ request.GET.fromrange }}" {% endif %}>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="fromrange" {% if request.GET.fromrange %} value="{{ request.GET.fromrange }}" {% endif %}>
                 <span class="input-group-addon">km</span>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="input-group">
+        <div class="col-sm-6">
+            <div class="input-group input-group-sm">
                 <span class="input-group-addon" id="basic-addon1">To Location</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="arrival_location" {% if request.GET.arrival_location %} value="{{ request.GET.arrival_location }}" {% endif %}>
+                <input type="text" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="arrival_location" {% if request.GET.arrival_location %} value="{{ request.GET.arrival_location }}" {% endif %}>
                 <span class="input-group-addon">Within</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="basic-addon1" name="torange" {% if request.GET.torange %} value="{{ request.GET.torange }}" {% endif %}>
+                <input type="number" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="torange" {% if request.GET.torange %} value="{{ request.GET.torange }}" {% endif %}>
                 <span class="input-group-addon">km</span>
             </div>
         </div>
@@ -65,6 +68,8 @@
     <a href="{%url 'log_trip' %}" class="btn btn-primary"> Log a Trip</a>
 
 </form>
+  </div>
+</div>
 
 <br/>
 
@@ -102,10 +107,10 @@
        <td>{{ trip.vehicle.vehicle_make }} {{ trip.vehicle.vehicle_model }}</td>
        <td><a href="{% url 'driver_detail' trip.driver.id %}">{{ trip.driver.name }}</td>
        <td>{{ trip.departure_location.description }}</td>
-       <td>{{ trip.departure_time }}</td>
+       <td>{{ trip.departure_time|date:'Y-m-d H:i' }}</td>
 
        <td>{{ trip.arrival_location.description }}</td>
-       <td>{{ trip.arrival_time }}</td>
+       <td>{{ trip.arrival_time|date:'Y-m-d H:i'}}</td>
        <td>{{ trip.distance }} {{ trip.vehicle.mileage_unit }}</td>
        <td>{{ trip.departure_mileage }} {{ trip.vehicle.mileage_unit }}</td>
        <td>{{ trip.arrival_mileage }} {{ trip.vehicle.mileage_unit }}</td>
