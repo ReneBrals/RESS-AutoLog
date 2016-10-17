@@ -10,13 +10,13 @@
         <div class="col-sm-3">
             <div class="input-group input-group-sm">
                 <span class="input-group-addon " id="basic-addon1">Vehicle</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="vehicle" {% if request.GET.vehicle %} value="{{ request.GET.vehicle }}" {% endif %}>
+                <input type="text" class="form-control" id="vehicle_field" aria-describedby="sizing-addon3" name="vehicle" {% if request.GET.vehicle %} value="{{ request.GET.vehicle }}" {% endif %}>
             </div>
         </div>
         <div class="col-sm-3">
             <div class="input-group input-group-sm">
                 <span class="input-group-addon" id="basic-addon1">Driver</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="driver" {% if request.GET.driver %} value="{{ request.GET.driver }}" {% endif %}>
+                <input type="text" class="form-control" id="driver_field" aria-describedby="sizing-addon3" name="driver" {% if request.GET.driver %} value="{{ request.GET.driver }}" {% endif %}>
             </div>
         </div>
     </div>
@@ -25,9 +25,9 @@
         <div class="col-sm-6">
             <div class="input-group input-group-sm">
                 <span class="input-group-addon" id="sizing-addon3">Distance</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="sizing-addon3" placeholder="min. distance" name="min_dist" {% if request.GET.min_dist %} value="{{ request.GET.min_dist }}" {% endif %}>
+                <input type="number" class="form-control" id="distance_field_1" aria-describedby="sizing-addon3" placeholder="min. distance" name="min_dist" {% if request.GET.min_dist %} value="{{ request.GET.min_dist }}" {% endif %}>
                 <span class="input-group-addon" aria-describedby="sizing-addon3"> - </span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="sizing-addon3" placeholder="max. distance" name="max_dist" {% if request.GET.max_dist %} value="{{ request.GET.max_dist }}" {% endif %}>
+                <input type="number" class="form-control" id="distance_field_2" aria-describedby="sizing-addon3" placeholder="max. distance" name="max_dist" {% if request.GET.max_dist %} value="{{ request.GET.max_dist }}" {% endif %}>
             </div>
         </div>
 
@@ -45,18 +45,18 @@
         <div class="col-sm-6">
             <div class="input-group input-group-sm">
                 <span class="input-group-addon" id="basic-addon1">From Location</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="departure_location" {% if request.GET.departure_location %} value="{{ request.GET.departure_location }}" {% endif %}>
+                <input type="text" class="form-control" id="from_field" aria-describedby="sizing-addon3" name="departure_location" {% if request.GET.departure_location %} value="{{ request.GET.departure_location }}" {% endif %}>
                 <span class="input-group-addon">Within</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="fromrange" {% if request.GET.fromrange %} value="{{ request.GET.fromrange }}" {% endif %}>
+                <input type="number" class="form-control" id="fromrange_field" aria-describedby="sizing-addon3" name="fromrange" {% if request.GET.fromrange %} value="{{ request.GET.fromrange }}" {% endif %}>
                 <span class="input-group-addon">km</span>
             </div>
         </div>
         <div class="col-sm-6">
             <div class="input-group input-group-sm">
                 <span class="input-group-addon" id="basic-addon1">To Location</span>
-                <input type="text" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="arrival_location" {% if request.GET.arrival_location %} value="{{ request.GET.arrival_location }}" {% endif %}>
+                <input type="text" class="form-control" id="to_field" aria-describedby="sizing-addon3" name="arrival_location" {% if request.GET.arrival_location %} value="{{ request.GET.arrival_location }}" {% endif %}>
                 <span class="input-group-addon">Within</span>
-                <input type="number" class="form-control" id="basic-url" aria-describedby="sizing-addon3" name="torange" {% if request.GET.torange %} value="{{ request.GET.torange }}" {% endif %}>
+                <input type="number" class="form-control" id="torange_field" aria-describedby="sizing-addon3" name="torange" {% if request.GET.torange %} value="{{ request.GET.torange }}" {% endif %}>
                 <span class="input-group-addon">km</span>
             </div>
         </div>
@@ -131,6 +131,41 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(function () {
+            PDFtitle = ""
+            if($('#driver_field').val() != ''){
+                PDFtitle += 'Driver: '+ $('#driver_field').val() + '\n'
+            }
+            if($('#vehicle_field').val() != ''){
+                PDFtitle += 'Vehicle: '+ $('#vehicle_field').val()+'\n'
+            }
+            if($('#distance_field_1').val() != '' && $('#distance_field_2').val()){
+                PDFtitle += 'Distance: '+ $('#distance_field_1').val()+' - '+$('#distance_field_2').val()+" km\n"
+            } else if ($('#distance_field_1').val() != ''){
+                PDFtitle += 'Distance: at least'+ $('#distance_field_1').val()+"km\n"
+            } else if ($('#distance_field_2').val() != ''){
+                PDFtitle += 'Distance: at most'+ $('#distance_field_2').val()+"km\n"
+            }
+            if($('#from_field').val() != ''){
+                PDFtitle += 'From: '+ $('#from_field').val()
+                if($('#fromrange_field').val() != ''){
+                    PDFtitle += " (" + $('#fromrange_field').val() + " km)"
+                }
+                PDFtitle += "\n"
+            }
+            if($('#to_field').val() != ''){
+                PDFtitle += 'To: '+ $('#to_field').val()
+                if($('#torange_field').val() != ''){
+                    PDFtitle += "(" + $('#torange_field').val() + " km)"
+                }
+                PDFtitle += "\n"
+            }
+            if($('#begin_date').val() != ''){
+                PDFtitle += 'Begin date: '+ $('#begin_date').val()+'\n'
+            }
+            if($('#end_date').val() != ''){
+                PDFtitle += 'End date: '+ $('#end_date').val()+'\n'
+            }
+
             $("#begin_date").datetimepicker({
                 useCurrent: false,
                 format: "YYYY-MM-DD",
@@ -158,6 +193,16 @@
             });
 
             $("#trip_table").DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 
+                    { extend: 'pdfHtml5',
+                    orientation: 'landscape',
+                    pageSize: 'A4',
+                    download: 'open',
+                    message: PDFtitle},
+                    'print',
+                ], 
                 columnDefs: [
                 { targets: 10, orderable: false},
                 { targets: [7,8,9], "type": "number_with_unit"}

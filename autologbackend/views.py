@@ -325,20 +325,24 @@ def trips(request):
 
 	if 'arrival_location' in request.GET and request.GET['arrival_location']!='':
 		
-		if request.GET['torange'] == '':
+		if 'torange' in request.GET and request.GET['torange'] == '':
 			rng = 0
-		else:
+		elif 'torange' in request.GET:
 			rng = float(request.GET['torange'])
+		else:
+			rng = 0
 
 		if rng == 0:
 			
 			trips_list = trips_list.filter(arrival_location__description__icontains=request.GET['arrival_location'])
 
 	if 'departure_location' in request.GET and request.GET['departure_location']!='':
-		if request.GET['fromrange'] == '':
+		if 'fromrange' in request.GET and request.GET['fromrange'] == '':
 			rng = 0
-		else:
+		elif 'fromrange' in request.GET:
 			rng = float(request.GET['fromrange'])
+		else:
+			rng = 0
 
 		if rng == 0:
 			trips_list = trips_list.filter(departure_location__description__icontains=request.GET['departure_location'])
@@ -347,10 +351,12 @@ def trips(request):
 			trips_list = geo.filter_trips_in_range_from(loc, float(rng), trips_list)
 
 	if 'arrival_location' in request.GET and request.GET['arrival_location']!='':
-		if request.GET['torange'] == '':
+		if 'torange' in request.GET and request.GET['torange'] == '':
 			rng = 0
-		else:
+		elif 'torange' in request.GET:
 			rng = float(request.GET['torange'])
+		else:
+			rng = 0
 		
 		if rng >0:
 			loc = geo.location_from_name(request.GET['arrival_location'])
