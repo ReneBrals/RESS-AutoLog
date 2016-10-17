@@ -3,7 +3,7 @@
 <h2>Log trip</h2>
 <hr>
 
-<form action="{% url 'submit_log_trip' %}" method="post">
+<form action="{% url 'submit_log_trip' %}" method="post" data-toggle="validator">
     {% csrf_token %}
     <div class="form-group">
         <label for="vehicle">Vehicle</label>
@@ -28,52 +28,64 @@
     <hr>
     <div class="form-group">
         <label for="departure_location">Departure location</label>
-        <input class="form-control" type="text" name="departure_location">
+        <input class="form-control" type="text" name="departure_location" required>
+        <div class="help-block with-errors"></div>
     </div>
+    
     <div class="form-group">
         <label for="departure_date">Departure time</label>
         <div class='input-group date' id='departure_datetime'>
-            <input type='text' class="form-control" name="departure_date" />
+            <input type='text' class="form-control" name="departure_datetime" required>
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
+        <div class="help-block with-errors"></div>
     </div>
     
     <div class="form-group">
         <label for="departure_milage">Departure milage</label>
-        <input class="form-control" type="number" name="departure_mileage">
+        <input class="form-control" type="number" name="departure_mileage" required>
+        <div class="help-block with-errors"></div>
     </div>
     <hr />
     <div class="form-group">
         <label for="arrival_location">Arrival location</label>
-        <input class="form-control" type="text" name="arrival_location">
+        <input class="form-control" type="text" name="arrival_location" required>
+        <div class="help-block with-errors"></div>
     </div>
     <div class="form-group">
         <label for="arrival_date">Arrival time</label>
         <div class="form-group">
                 <div class='input-group date' id='arrival_datetime'>
-                    <input type='text' class="form-control" name="arrival_date" />
+                    <input type='text' class="form-control" name="arrival_datetime" required>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
                 </div>
+                <div class="help-block with-errors"></div>
             </div>
     </div>
 
     <div class="form-group">
         <label for="arrival_milage">Arrival milage</label>
-        <input class="form-control" type="number" name="arrival_mileage">
+        <input class="form-control" type="number" name="arrival_mileage" required>
+        <div class="help-block with-errors"></div>
     </div>
     <input class="form-control btn-primary" type="submit" value="Log" />
     </div>
 </form>
 <script type="text/javascript">
-            $(function () {
-                $('#departure_datetime').datetimepicker();
+            $("#departure_datetime").datetimepicker({
+                useCurrent: false,
+                format: "YYYY-MM-DD HH:mm",
+                calendarWeeks: true 
             });
-            $(function () {
-                $('#arrival_datetime').datetimepicker();
+            
+            $("#arrival_datetime").datetimepicker({
+                useCurrent: false,
+                format: "YYYY-MM-DD HH:mm",
+                calendarWeeks: true 
             });
             $("#departure_datetime").on("dp.change", function (e) {
                 $('#arrival_datetime').data("DateTimePicker").minDate(e.date);

@@ -73,7 +73,7 @@ def submit_log_trip(request):
 				parse_time(request.POST["departure_time"])
 			)
 		else:
-			departure_time = datetime.parse_datetime(request.POST["departure_datetime"])
+			departure_time = parse_datetime(request.POST["departure_datetime"])
 
 		if "arrival_date" in request.POST and "arrival_time" in request.POST:
 			arrival_time = datetime.datetime.combine(
@@ -81,7 +81,7 @@ def submit_log_trip(request):
 				parse_time(request.POST["arrival_time"])
 			)
 		else:
-			arrival_time = datetime.parse_datetime(request.POST["arrival_datetime"])
+			arrival_time = parse_datetime(request.POST["arrival_datetime"])
 
 		if 'departure_location' in request.POST:
 			departure_location = geo.location_from_name(request.POST["departure_location"])
@@ -93,11 +93,11 @@ def submit_log_trip(request):
 		elif 'arrival_location_lat' in request.POST and 'arrival_location_lon' in request.POST:
 			arrival_location = geo.location_from_coords(float(request.POST["arrival_location_lat"]),float(request.POST["arrival_location_lon"]))
 
-	except KeyError as e:
+	except ZeroDivisionError as e:
 		if 'm' in request.POST and request.POST['m'] == 'm':
 			return HttpResponseRedirect(reverse('mobile'))
 		else:
-			return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+			return HttpResponseRedirect(reverse('trips'))
 	else:
 		trip = Trip(
 			vehicle=selected_vehicle,
@@ -114,7 +114,7 @@ def submit_log_trip(request):
 		if 'm' in request.POST and request.POST['m'] == 'm':
 			return HttpResponseRedirect(reverse('mobile'))
 		else:
-			return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+			return HttpResponseRedirect(reverse('trips'))
 
 def edit_trip(request, trip_id):
 	trip = Trip.objects.get(pk=trip_id)
