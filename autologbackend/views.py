@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.utils.dateparse import *
@@ -9,6 +10,8 @@ from django.db.models.functions import Concat
 from django.db.models import Value as V
 from django.db.models import Max
 from django.views.decorators.csrf import csrf_exempt
+
+
 
 from .models import Vehicle, Driver, Trip
 import geo
@@ -43,7 +46,7 @@ def vehicle_detail(request,vehicle_id):
 
 	return HttpResponse(template.render(context,request))
 
-def log_trip(request):
+def log_trip(request, trip_id=-1, errors=""):
 	vehicles = Vehicle.objects.order_by('license_plate')
 	drivers = Driver.objects.order_by('name')
 
@@ -52,60 +55,145 @@ def log_trip(request):
 		'drivers' : drivers,
 	}
 
+	if trip_id != -1:
+		trip = Trip.objects.get(pk=trip_id)
+		context['trip'] = trip
+
+	if errors !="":
+		context['errors'] = errors
+
 	template = loader.get_template('autologbackend/log_trip.html')
 	return HttpResponse(template.render(context,request))
 
 @csrf_exempt
-def submit_log_trip(request):
-	try:
-		selected_vehicle = Vehicle.objects.get(pk=request.POST['vehicle'])
-		selected_driver = Driver.objects.get(pk=request.POST['driver'])
+def submit_log_trip(request, trip_id=-1):
+	errors = []
 
-		departure_mileage = int(request.POST['departure_mileage'])
-		arrival_mileage = int(request.POST['arrival_mileage'])
-
-		departure_time = datetime.datetime.combine(
-			parse_date(request.POST["departure_date"]),
-			parse_time(request.POST["departure_time"])
-			)
-
-		arrival_time = datetime.datetime.combine(
-			parse_date(request.POST["arrival_date"]),
-			parse_time(request.POST["arrival_time"])
-			)
-
-		if 'departure_location' in request.POST:
-			departure_location = geo.location_from_name(request.POST["departure_location"])
-		elif 'departure_location_lat' in request.POST and 'departure_location_lon' in request.POST:
-			departure_location = geo.location_from_coords(float(request.POST["departure_location_lat"]),float(request.POST["departure_location_lon"]))
-
-		if 'arrival_location' in request.POST:
-			arrival_location = geo.location_from_name(request.POST["arrival_location"])
-		elif 'arrival_location_lat' in request.POST and 'arrival_location_lon' in request.POST:
-			arrival_location = geo.location_from_coords(float(request.POST["arrival_location_lat"]),float(request.POST["arrival_location_lon"]))
-
-	except KeyError as e:
-		if 'm' in request.POST and request.POST['m'] == 'm':
-			return HttpResponseRedirect(reverse('mobile'))
-		else:
-			return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+	if 'vehicle' in request.POST and request.POST['vehicle'] != '':
+		try:
+			selected_vehicle = Vehicle.objects.get(pk=request.POST['vehicle'])
+		except IndexError:
+			errors.append("Invalid vehicle ID.")
 	else:
-		trip = Trip(
-			vehicle=selected_vehicle,
-			driver=selected_driver,
-			departure_time = departure_time,
-			departure_mileage = departure_mileage,
-			departure_location = departure_location,
-			arrival_time = arrival_time,
-			arrival_mileage = arrival_mileage,
-			arrival_location = arrival_location
-		)
-		trip.save()
+		errors.append("No vehicle selected.")
+
+	if 'driver' in request.POST and request.POST['driver'] != '':
+		try:
+			selected_driver = Driver.objects.get(pk=request.POST['driver'])
+		except IndexError:
+			errors.append("Invalid driver ID.")
+	else:
+		errors.append("No driver selected.")
+
+
+	if 'departure_mileage' in request.POST and request.POST['departure_mileage'] != '':
+		try:
+			departure_mileage = int(request.POST['departure_mileage'])
+			if departure_mileage < 0:
+				errors.append("Departure mileage is negative.")
+		except ValueError:
+			errors.append("Departure mileage is not a number.")
+	else:
+		errors.append("No departure mileage specified.")
+
+	if 'arrival_mileage' in request.POST and request.POST['arrival_mileage'] != '':
+		try:
+			arrival_mileage = int(request.POST['arrival_mileage'])
+			if arrival_mileage < 0:
+				errors.append("Arrival mileage is negative.")
+		except ValueError:
+			errors.append("Arrival mileage is not a number.")
+	else:
+		errors.append("No arrival mileage specified.")
+
+	if 'departure_date' in request.POST and 'departure_time' in request.POST:
+		try:
+			departure_time = datetime.datetime.combine(
+				parse_date(request.POST["departure_date"]),
+				parse_time(request.POST["departure_time"])
+			)
+		except:
+			errors.append("Departure date/time is not a valid date/time.")
+	elif 'departure_datetime' in request.POST and request.POST['departure_datetime'] != '':
+		departure_time = parse_datetime(request.POST["departure_datetime"])
+		if departure_time == None:
+			errors.append("Departure date/time is not a valid date/time.")
+	else:
+		errors.append("No departure date/time specified.")
+
+	if 'arrival_date' in request.POST and 'arrival_time' in request.POST:
+		try:
+			arrival_time = datetime.datetime.combine(
+				parse_date(request.POST["arrival_date"]),
+				parse_time(request.POST["arrival_time"])
+			)
+		except:
+			errors.append("Arrival date/time is not a valid date/time.")
+	elif 'arrival_datetime' in request.POST and request.POST['arrival_datetime'] != '':
+		arrival_time = parse_datetime(request.POST["arrival_datetime"])
+		if arrival_time == None:
+			errors.append("Arrival date/time is not a valid date/time.")
+	else:
+		errors.append("No arrival date/time specified.")
+
+	if 'departure_location' in request.POST and request.POST['departure_location'] != '':
+		departure_location = geo.location_from_name(request.POST["departure_location"])
+		if departure_location == None:
+			departure_location = Location(lat = 0, lon = 0, description = request.POST['departure_location'])
+	elif 'departure_location_lat' in request.POST and 'departure_location_lon' in request.POST:
+		departure_location = geo.location_from_coords(float(request.POST["departure_location_lat"]),float(request.POST["departure_location_lon"]))
+		if departure_location == None:
+			errors.append("No results for geolocation at departure coordinates.")
+
+
+
+	if 'arrival_location' in request.POST and request.POST['arrival_location'] != '':
+		arrival_location = geo.location_from_name(request.POST["arrival_location"])
+		if arrival_location == None:
+			arrival_location = Location(lat = 0, lon = 0, description = request.POST['arrival_location'])
+	elif 'arrival_location_lat' in request.POST and 'arrival_location_lon' in request.POST:
+		arrival_location = geo.location_from_coords(float(request.POST["arrival_location_lat"]),float(request.POST["arrival_location_lon"]))
+		if arrival_location == None:
+			errors.append("No results for geolocation at arrival coordinates.")
+	else:
+		errors.append("No arrival location specified.")
+
+	if not errors:
+		if trip_id == -1:
+			trip = Trip(
+				vehicle=selected_vehicle,
+				driver=selected_driver,
+				departure_time = departure_time,
+				departure_mileage = departure_mileage,
+				departure_location = departure_location,
+				arrival_time = arrival_time,
+				arrival_mileage = arrival_mileage,
+				arrival_location = arrival_location
+			)
+			trip.save()
+		else:
+			trip = Trip.objects.get(pk=trip_id)
+
+			trip.vehicle=selected_vehicle
+			trip.driver=selected_driver
+			trip.departure_time = departure_time
+			trip.departure_mileage = departure_mileage
+			trip.departure_location = departure_location
+			trip.arrival_time = arrival_time
+			trip.arrival_mileage = arrival_mileage
+			trip.arrival_location = arrival_location
+			trip.save()
 
 		if 'm' in request.POST and request.POST['m'] == 'm':
 			return HttpResponseRedirect(reverse('mobile'))
 		else:
-			return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+			return HttpResponseRedirect(reverse('trips'))
+	else:
+		if 'm' in request.POST and request.POST['m'] == 'm':
+			return HttpResponseRedirect(reverse('mobile'))
+		else:
+			return log_trip(request, errors)
+
 
 def edit_trip(request, trip_id):
 	trip = Trip.objects.get(pk=trip_id)
@@ -190,14 +278,13 @@ def submit_register_vehicle(request):
 			build_year = build_year,
 			vehicle_make = make,
 			vehicle_model = model,
-			mileage= mileage,
 			mileage_unit = mileage_unit
 		)
 
 		vehicle.save()
 		return HttpResponseRedirect(reverse('index'))
 
-def trips(request, page_nr):
+def trips(request):
 	RESULTS_PER_PAGE = 20
 
 	trips_list = Trip.objects.order_by('-arrival_time')
@@ -208,59 +295,54 @@ def trips(request, page_nr):
 
 	try:
 		trips_list = trips_list.filter(veh__icontains=request.GET['vehicle'])
-		context['vehicle_fill'] = request.GET['vehicle']
 	except:
 		pass
 
 	try:
 		trips_list = trips_list.filter(driver__name__icontains=request.GET['driver'])
-		context['driver_fill'] = request.GET['driver']
 	except:
 		pass
 
 	try:
 		trips_list = trips_list.filter(distance__gte=request.GET['min_dist'])
-		context['mindist_fill'] = request.GET['min_dist']
 	except:
 		pass
 
 	try:
 		trips_list = trips_list.filter(distance__lte=request.GET['max_dist'])
-		context['maxdist_fill'] = request.GET['max_dist']
 	except:
 		pass
 
 	try:
 		trips_list = trips_list.filter(arrival_time__gte= parse_date(request.GET['begin_date']))
-		context['bdate_fill'] = request.GET['begin_date']
 	except:
 		pass
 
 	try:
-		trips_list = trips_list.filter(arrival_time__lte= parse_date(request.GET['end_date']))
-		context['edate_fill'] = request.GET['end_date']
+		trips_list = trips_list.filter(arrival_time__lte= parse_date(request.GET['end_date'])+ datetime.timedelta(days=1))
 	except:
 		pass
 
 	if 'arrival_location' in request.GET and request.GET['arrival_location']!='':
-		context['arr_fill'] = request.GET['arrival_location']
 		
-		if request.GET['torange'] == '':
+		if 'torange' in request.GET and request.GET['torange'] == '':
 			rng = 0
-		else:
+		elif 'torange' in request.GET:
 			rng = float(request.GET['torange'])
+		else:
+			rng = 0
 
 		if rng == 0:
 			
 			trips_list = trips_list.filter(arrival_location__description__icontains=request.GET['arrival_location'])
 
 	if 'departure_location' in request.GET and request.GET['departure_location']!='':
-		if request.GET['fromrange'] == '':
+		if 'fromrange' in request.GET and request.GET['fromrange'] == '':
 			rng = 0
-		else:
+		elif 'fromrange' in request.GET:
 			rng = float(request.GET['fromrange'])
-		context['dep_fill'] = request.GET['departure_location']
-		context['fromrange_fill'] = request.GET['fromrange']
+		else:
+			rng = 0
 
 		if rng == 0:
 			trips_list = trips_list.filter(departure_location__description__icontains=request.GET['departure_location'])
@@ -269,32 +351,16 @@ def trips(request, page_nr):
 			trips_list = geo.filter_trips_in_range_from(loc, float(rng), trips_list)
 
 	if 'arrival_location' in request.GET and request.GET['arrival_location']!='':
-		if request.GET['torange'] == '':
+		if 'torange' in request.GET and request.GET['torange'] == '':
 			rng = 0
-		else:
+		elif 'torange' in request.GET:
 			rng = float(request.GET['torange'])
+		else:
+			rng = 0
 		
 		if rng >0:
 			loc = geo.location_from_name(request.GET['arrival_location'])
 			trips_list = geo.filter_trips_in_range_to(loc, rng, trips_list)
-
-
-	if isinstance(trips_list,list):
-		num_pages = len(trips_list)/RESULTS_PER_PAGE
-		if len(trips_list)%RESULTS_PER_PAGE:
-			num_pages += 1
-	else:
-		num_pages = trips_list.count()/RESULTS_PER_PAGE
-		if trips_list.count()%RESULTS_PER_PAGE:
-			num_pages += 1
-
-	context['num_pages'] = num_pages
-	context['page_nr'] = page_nr
-	context['prev_page_nr'] = 0 if int(page_nr) == 0 else int(page_nr) - 1
-	context['next_page_nr'] = int(page_nr) + 1 if int(page_nr) < (num_pages - 1) else int(page_nr)
-
-	if int(page_nr) < num_pages:
-		trips_list = trips_list[int(page_nr)*RESULTS_PER_PAGE:(int(page_nr)+1)*RESULTS_PER_PAGE]
 
 	context['trips_list'] = trips_list
 
@@ -305,7 +371,7 @@ def trips(request, page_nr):
 def delete_trip(request,trip_id):
 	Trip.objects.get(pk=trip_id).delete()
 
-	return HttpResponseRedirect(reverse('trips', kwargs={'page_nr': 0}))
+	return HttpResponseRedirect(reverse('trips'))
 
 def vehicles(request, page_nr):
 	RESULTS_PER_PAGE = 20
@@ -333,6 +399,32 @@ def vehicles(request, page_nr):
 	template = loader.get_template('autologbackend/vehicles.html')
 	return HttpResponse(template.render(context,request))
 
+def drivers(request, page_nr):
+	RESULTS_PER_PAGE = 20
+
+	context= {}
+	
+
+	dris = Driver.objects.order_by('name')
+	num_pages = dris.count()/RESULTS_PER_PAGE
+	if dris.count()%RESULTS_PER_PAGE:
+		num_pages += 1
+	for e in dris:
+		try:
+		    e.last_trip = Trip.objects.filter(driver=e).order_by('-arrival_time')[0]
+		except:
+			pass
+
+
+	context['driver_list'] = dris
+	context['page_nr'] = page_nr
+	context['num_pages'] = num_pages
+	context['prev_page_nr'] = 0 if int(page_nr) == 0 else int(page_nr) - 1
+	context['next_page_nr'] = int(page_nr) + 1 if int(page_nr) < (num_pages - 1) else int(page_nr)
+
+	template = loader.get_template('autologbackend/drivers.html')
+	return HttpResponse(template.render(context,request))
+
 
 def vehicles_bare(request):
 	context= {}
@@ -353,8 +445,13 @@ def drivers_bare(request):
 def delete_vehicle(request, vehicle_id):
 	vehicle = Vehicle.objects.get(pk=vehicle_id)
 	vehicle.delete()
-
 	return HttpResponseRedirect(reverse('vehicles', kwargs={'page_nr': 0}))
+
+def delete_driver(request, driver_id):
+	vehicle = Vehicle.objects.get(pk=vehicle_id)
+	vehicle.delete()
+
+	return HttpResponseRedirect(reverse('drivers', kwargs={'page_nr': 0}))
 
 def mobile_log(request):
 	vehicles = Vehicle.objects.order_by('license_plate')
@@ -370,4 +467,21 @@ def mobile_log(request):
 def mobile(request):
 	context = {}
 	template = loader.get_template('autologbackend/mobile.html')
+	return HttpResponse(template.render(context,request))
+
+def driver_detail(request, driver_id):
+	driver = Driver.objects.get(pk=driver_id)
+	latest_vehicle_trips = Trip.objects.filter(driver=driver).order_by('-arrival_time').annotate(distance=F('arrival_mileage')-F('departure_mileage'))[:15]
+
+	last_trip = latest_vehicle_trips[0]
+
+
+	context = {
+		'driver': driver,
+		'latest_vehicle_trips': latest_vehicle_trips,
+		'last_trip' : last_trip,
+	}
+
+	template = loader.get_template('autologbackend/driver_detail.html')
+
 	return HttpResponse(template.render(context,request))

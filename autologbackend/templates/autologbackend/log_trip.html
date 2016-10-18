@@ -1,15 +1,28 @@
 {% extends 'autologbackend/base.html' %}
 {% block content %}
+{% if trip %}
+<h2>Edit trip</h2>
+{% else %}
 <h2>Log trip</h2>
+{% endif %}
 <hr>
 
-<form action="{% url 'submit_log_trip' %}" method="post">
+{% if errors %}
+<div class="alert alert-danger" role="alert">
+    <strong>Something went wrong!</strong>
+    {% for err in errors %}
+        {{ err }}
+    {% endfor%}
+</div>
+{% endif %}
+
+<form action="{%if trip %}{% url 'submit_log_trip' trip.id %}{% else %}{% url 'submit_log_trip' %}{% endif %}" method="post" data-toggle="validator">
     {% csrf_token %}
     <div class="form-group">
         <label for="vehicle">Vehicle</label>
         <select class="form-control" name="vehicle">
         {% for veh in vehicles %}
-            <option id="vehicle{{ forloop.counter }}" value="{{ veh.id }}">{{ veh.license_plate }} - {{ veh.vehicle_make }} {{ veh.vehicle_model }}</option> 
+            <option id="vehicle{{ forloop.counter }}" value="{{ veh.id }}" {%if request.POST.vehicle == veh.id %} selected="selected" {% elif veh.id == trip.vehicle.id %} selected="selected" {% endif %}>{{ veh.license_plate }} - {{ veh.vehicle_make }} {{ veh.vehicle_model }}</option> 
         {% endfor %}
         </select>
     </div>
@@ -18,7 +31,7 @@
         <label for="driver">Driver</label>
         <select class="form-control" name="driver">
         {% for dri in drivers %}
-            <option id="driver{{ forloop.counter }}" value="{{ dri.id }}">{{ dri.name }}</option>
+            <option id="driver{{ forloop.counter }}" value="{{ dri.id }}" {%if request.POST.driver == dri.id %} selected="selected" {% elif dri.id == trip.driver.id %} selected="selected" {% endif %}>{{ dri.name }} </option>
         {% endfor %}
         </select>
     </div>
@@ -28,33 +41,70 @@
     <hr>
     <div class="form-group">
         <label for="departure_location">Departure location</label>
-        <input class="form-control" type="text" name="departure_location">
-    </div>
-    <div class="form-group">
-        <label for="departure_date">Departure time</label>
-        <input class="form-control" type="date" name ="departure_date">
-        <input class="form-control" type="time" name ="departure_time">
+        <input class="form-control" type="text" name="departure_location" {% if request.POST.departure_location %} value="{{ request.POST.departure_location }}" {% elif trip %} value="{{ trip.departure_location.description }}"{% endif %} required>
+        <div class="help-block with-errors"></div>
     </div>
     
     <div class="form-group">
-        <label for="departure_milage">Departure milage</label>
-        <input class="form-control" type="number" name="departure_mileage">
+        <label for="departure_date">Departure time</label>
+        <div class='input-group date' id='departure_datetime'>
+            <input type='text' class="form-control" name="departure_datetime" {% if request.POST.departure_datetime %} value="{{ request.POST.departure_datetime }}" {% elif trip %} value="{{ trip.departure_time|date:"Y-m-d H:i" }}"{% endif %} required>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+        <div class="help-block with-errors"></div>
+    </div>
+    
+    <div class="form-group">
+        <label for="departure_milage">Departure mileage</label>
+        <input class="form-control" type="number" name="departure_mileage" {% if request.POST.departure_mileage %} value="{{ request.POST.departure_mileage }}" {% elif trip %} value="{{ trip.departure_mileage }}"{% endif %} min='0' required>
+        <div class="help-block with-errors"></div>
     </div>
     <hr />
     <div class="form-group">
         <label for="arrival_location">Arrival location</label>
-        <input class="form-control" type="text" name="arrival_location">
+        <input class="form-control" type="text" name="arrival_location" {% if request.POST.arrival_location %} value="{{ request.POST.arrival_location }}" {% elif trip %} value="{{ trip.arrival_location.description }}"{% endif %} required>
+        <div class="help-block with-errors"></div>
     </div>
     <div class="form-group">
         <label for="arrival_date">Arrival time</label>
-        <input class="form-control" type="date" name ="arrival_date">
-        <input class="form-control" type="time" name ="arrival_time">
+        <div class="form-group">
+                <div class='input-group date' id='arrival_datetime'>
+                    <input type='text' class="form-control" name="arrival_datetime" {% if request.POST.arrival_datetime %} value="{{ request.POST.arrival_datetime }}" {% elif trip %} value="{{ trip.arrival_time|date:"Y-m-d H:i" }}"{% endif %} required>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+                <div class="help-block with-errors"></div>
+            </div>
     </div>
+
     <div class="form-group">
-        <label for="arrival_milage">Arrival milage</label>
-        <input class="form-control" type="number" name="arrival_mileage">
+        <label for="arrival_milage">Arrival mileage</label>
+        <input class="form-control" type="number" name="arrival_mileage" {% if request.POST.arrival_mileage %} value="{{ request.POST.arrival_mileage }}" {% elif trip %} value="{{ trip.arrival_mileage }}"{% endif %} min='0' required>
+        <div class="help-block with-errors"></div>
     </div>
     <input class="form-control btn-primary" type="submit" value="Log" />
     </div>
 </form>
+<script type="text/javascript">
+            $("#departure_datetime").datetimepicker({
+                useCurrent: false,
+                format: "YYYY-MM-DD HH:mm",
+                calendarWeeks: true 
+            });
+            
+            $("#arrival_datetime").datetimepicker({
+                useCurrent: false,
+                format: "YYYY-MM-DD HH:mm",
+                calendarWeeks: true 
+            });
+            $("#departure_datetime").on("dp.change", function (e) {
+                $('#arrival_datetime').data("DateTimePicker").minDate(e.date);
+            });
+            $("#arrival_datetime").on("dp.change", function (e) {
+                $('#departure_datetime').data("DateTimePicker").maxDate(e.date);
+            });
+</script>
 {% endblock %}
