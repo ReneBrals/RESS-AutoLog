@@ -26,4 +26,6 @@ urlpatterns = [
     url(r'^delete_driver/(?P<driver_id>[0-9]+)/$', views.delete_driver, name='delete_driver'),
     url(r'^mobile/$', views.mobile, name='mobile'),
     url(r'^mobile_log/$', views.mobile_log, name='mobile_log'),
+    url(r'^start_log/$', views.start_log, name='start_log'),
+    url(r'^geolocation/(?P<lat>\d+\.\d+)/(?P<lon>\d+\.\d+)/$', views.get_location_by_latlong, name='geolocation'),
 ]

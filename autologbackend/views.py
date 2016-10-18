@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.urls import reverse
 from django.utils.dateparse import *
 from django.shortcuts import render
@@ -463,6 +463,27 @@ def mobile_log(request):
 	}
 	template = loader.get_template('autologbackend/mobile_log.html')
 	return HttpResponse(template.render(context,request))
+
+def start_log(request):
+	vehicles = Vehicle.objects.order_by('license_plate')
+	drivers = Driver.objects.order_by('name')
+
+	context = {
+		'vehicles' : vehicles,
+		'drivers' : drivers,
+	}
+	template = loader.get_template('autologbackend/start_trip.html')
+	return HttpResponse(template.render(context,request))
+
+def get_location_by_latlong(request, lat, lon):
+        response = {}
+        res = geo.name_from_coords(float(lat), float(lon))
+        if (res == None):
+            res = ""
+                
+        response['address'] = res;
+        return JsonResponse(response)
+
 
 def mobile(request):
 	context = {}

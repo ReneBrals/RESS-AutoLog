@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -13,6 +14,7 @@
     <title>AutoLog</title>
 
     <!-- BOOTSTRAP -->
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
@@ -23,16 +25,61 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   <!-- END BOOTSTRAP -->
 
-  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
 
   <script>
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(fillPosition);
-        } else {
-            //not defined
+        var hasArrived = false;
+        $(document).ready( function() {
+            $("#arrival").hide()
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(fillPosition);
+            } else {
+                //not defined
+            }
+            var date = new Date();
+            console.log(getDate(date));
+            $("#depart_date").val(getDate(date));
+            console.log(getTime(date))
+            $("#depart_time").val(getTime(date));
+        });
+
+        function getDate (date) {
+                var local = new Date(date);
+                local.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                return local.toJSON().slice(0, 10);
+            }
+
+            function getTime (date) {
+                var local = new Date(date);
+                local.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                return local.toJSON().slice(11, 16)
+        }
+
+        function arrived() {
+            hasArrived = true;
+            var date = new Date();
+            $("#arrive_date").val(getDate(date));
+            $("#arrive_time").val(getTime(date));
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(fillPosition);
+            }
+            $("#arrived_button").hide();
+            $("#arrival").show();
+
         }
 
         function fillPosition(position) {
+            $.ajax({
+                url: "../geolocation/" + position.coords.latitude + "/" + position.coords.longitude + "/", success: function(result) {
+                    console.log(result);
+                    if (hasArrived) {
+                        if ($("#arrive_location").val() == "")
+                            $("#arrive_location").val(result['address']);
+                    } else {
+                        if ($("#depart_location").val() == "")
+                            $("#depart_location").val(result['address']);
+                    }
+                }
+            });
             console.log(position.coords.latitude);
             console.log(position.coords.longitude);
         }
@@ -48,6 +95,7 @@
       <div class="site-wrapper-inner">
         <div class="cover-container">
           <div class="masthead clearfix">
+              <!--
             <div class="inner">
               <h3 class="masthead-brand">AutoLog</h3>
               <nav>
@@ -56,6 +104,7 @@
                 </ul>
               </nav>
             </div>
+              -->
           </div>
 
           <div class="inner cover">
@@ -88,14 +137,14 @@
     <div class="col-lg-6">
     <div class="form-group">
         <label for="departure_location">Departure location</label>
-        <input class="form-control" type="text" name="departure_location">
+        <input id="depart_location" class="form-control" type="text" name="departure_location">
     </div>
     </div>
     <div class="col-lg-6">
     <div class="form-group">
         <label for="departure_date">Departure time</label>
-        <input class="form-control" type="date" name ="departure_date">
-        <input class="form-control" type="time" name ="departure_time">
+        <input id="depart_date" class="form-control" type="date" name ="departure_date">
+        <input id="depart_time" class="form-control" type="time" name ="departure_time">
     </div>
     </div>
     </div>
@@ -109,17 +158,18 @@
     </div>
     <br />
     <hr />
+    <div id="arrival">
     <div class="col-lg-6">
     <div class="form-group">
         <label for="arrival_location">Arrival location</label>
-        <input class="form-control" type="text" name="arrival_location">
+        <input id="arrive_location" class="form-control" type="text" name="arrival_location">
     </div>
     </div>
     <div class="col-lg-6">
     <div class="form-group">
         <label for="arrival_date">Arrival time</label>
-        <input class="form-control" type="date" name ="arrival_date">
-        <input class="form-control" type="time" name ="arrival_time">
+        <input id="arrive_date" class="form-control" type="date" name ="arrival_date">
+        <input id="arrive_time" class="form-control" type="time" name ="arrival_time">
     </div>
     </div>
     <div class="col-lg-6">
@@ -128,8 +178,11 @@
         <input class="form-control" type="number" name="arrival_mileage">
     </div>
     </div>
-    <input class="form-control btn-primary" type="submit" value="Log" />
+    <input id="log" class="form-control btn-primary" type="submit" value="Submit" />
     </div>
+    <div id="arrived_button" class="form-control btn-primary" onclick="arrived()">I arrived!</div>
+    </div>
+    <br />
 </form>
           </div>
         </div>
