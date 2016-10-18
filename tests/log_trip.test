@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="http://localhost:8000/autologbackend/" />
+<title>seleniumtest1</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">seleniumtest1</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/autologbackend/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>link=Log a trip</td>
+	<td></td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>name=vehicle</td>
+	<td>label=9-TVR-47 - Audi S8</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>name=driver</td>
+	<td>label=René Brals</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=departure_location</td>
+	<td>Groningen, Grote markt</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=departure_date</td>
+	<td>2016-10-13</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=departure_time</td>
+	<td>11:00</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=departure_mileage</td>
+	<td>18152</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=arrival_location</td>
+	<td>Groningen, Zernikeplein</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=arrival_date</td>
+	<td>2016-10-13</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=arrival_time</td>
+	<td>11:30</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>name=arrival_mileage</td>
+	<td>18159</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=input.form-control.btn-primary</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>css=span.glyphicon.glyphicon-floppy-remove</td>
+	<td></td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>css=button.btn.btn-primary</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
