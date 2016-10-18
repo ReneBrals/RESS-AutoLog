@@ -1,9 +1,110 @@
 {% extends 'autologbackend/base.html' %}
-
+{% load staticfiles %}
 {% block content %}
+<div class="jumbotron" style="background:url('{% static "autologbackend/1.jpg" %}') center">
+    <h2 style="color:#FFF">AutoLog</h2>
+    <p style="color:#FFF"> Over the last 30 days, <strong style="color:#F78928">{{ lastmonth_numdrivers }} drivers</strong>  drove <strong style="color:#F78928">{{ lastmonth_distance }} km</strong> in <strong style="color:#F78928">{{ lastmonth_numvehicles }} vehicles</strong>.
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+            <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Recently Active Drivers</h4>
+            <a class="btn btn-primary pull-right" type="button" href="{% url 'vehicles' 0 %}">All Drivers </a>
+                
+            </div>
+                        <table class="table">
+                <tr>
+                    <th>Driver</th>
+                    <th>Last Vehicle</th>
+                    <th>Last Known Location</th>
+                    <th>Distance Driven (30d)</th>
+                </tr>
+
+                {% for dri in lastmonth_drivers %}
+        <tr>
+        <td>{{ dri.name }}</td>
+        <td>{{ dri.last_trip.vehicle.vehicle_make }} {{ dri.last_trip.vehicle.vehicle_model }}</td>
+                    <td>{{ dri.last_trip.arrival_location.description }}</td>
+                    <td>{{ dri.month_distance }} km</td>
+        </tr>
+        {% endfor %}
+
+            </table>
+        </div>
+    </div>
+    <div class="col-md-5">
+        <div class="panel panel-default">
+            <!-- Default panel contents -->
+            <div class="panel-heading clearfix">
+            <h4 class="panel-title pull-left" style="padding-top: 7.5px;">Recently Used Vehicles</h4>
+            <a class="btn btn-primary pull-right" type="button" href="{% url 'vehicles' 0 %}">All Vehicles </a>
+                
+            </div>
+            <!-- Table -->
+            <table class="table table-striped">
+                <tr>
+                    <th>Vehicle</th>
+                    <th>Last Driver</th>
+                    <th>Last Known Location</th>
+                    <th>Distance Driven (30d)</th>
+                </tr>
+
+                {% for veh in lastmonth_vehicles %}
+                <tr>
+                    <td><a href="{% url 'vehicle_detail' veh.id %}">{{ veh.vehicle_make }} {{ veh.vehicle_model }}</a></td>
+                    <td>{{ veh.last_trip.driver.name }}</td>
+                    <td>{{ veh.last_trip.arrival_location.description }}</td>
+                    <td>{{ veh.month_distance }} {{ veh.mileage_unit }}</td>
+                </tr>
+                {% endfor %}
+
+            </table>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+            <a href="{% url 'trips' %}" >
+                <h4 style="color:#FFF">
+                    <span class="glyphicon glyphicon-road" aria-hidden="true"></span> View all Trips
+                </h4>
+            </a>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+            <a href="{% url 'log_trip' %}" >
+                <h4 style="color:#FFF">
+                    <span class="glyphicon glyphicon-road" aria-hidden="true"></span> Log a Trip
+                </h4>
+            </a>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+            <a href="{% url 'register_vehicle' %}" >
+                <h4 style="color:#FFF">
+                    <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span> Register a Vehicle
+                </h4>
+            </a>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+            <a href="{% url 'register_driver' %}" >
+                <h4 style="color:#FFF">
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span> Register a Driver
+                </h4>
+            </a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <h3> Latest trips </h3>
 {% if latest_trips_list %}
-	
 
     <table class="table table-striped">
 		<tr>

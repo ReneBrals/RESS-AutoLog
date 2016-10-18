@@ -2,8 +2,16 @@
 {% load extras %}
 {% block content %}
 <h3> Logged trips </h3>
-<div class="panel panel-default">
-  <div class="panel-body">
+  <div class="panel panel-info">
+      <div class="panel-heading">
+      <a data-toggle="collapse" href="#collapse1">
+        <h4 class="panel-title">
+          Filters
+        </h4>
+        </a>
+      </div>
+    
+  <div class="panel-body collapse" id ="collapse1">
 <form action="{% url 'trips' %}" method="GET" id="filterform">
 
     <div class="row">

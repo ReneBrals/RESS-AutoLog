@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.utils.dateparse import *
 from django.shortcuts import render
 from django.template import RequestContext
-from django.db.models import F
+from django.db.models import F, Sum, Count
 from django.template import loader
 from django.db.models.functions import Concat
 from django.db.models import Value as V
@@ -18,14 +18,49 @@ import geo
 
 # Create your views here.
 def index(request):
-	latest_trips_list = Trip.objects.order_by('-arrival_time').annotate(distance=F('arrival_mileage')-F('departure_mileage'))[:15]
+	latest_trips_list = Trip.objects.order_by('-arrival_time').annotate(distance=F('arrival_mileage')-F('departure_mileage'))[:5]
 	vehicles = Vehicle.objects.order_by('license_plate')
 
-	template = loader.get_template('autologbackend/index.html')
 	context = {
 		'latest_trips_list': latest_trips_list,
 		'vehicles': vehicles,
 	}
+
+	last_month = Trip.objects.filter(departure_time__gte=datetime.datetime.date(datetime.datetime.now()) - datetime.timedelta(days=30))
+	lm_vehicles = list(set([x.vehicle for x in last_month]))
+	context['lastmonth_vehicles'] = Vehicle.objects.annotate(newest_trip=Max('trip__departure_time')) \
+		.filter(newest_trip__gte=datetime.datetime.date(datetime.datetime.now()) - datetime.timedelta(days=30))
+
+	context['lastmonth_drivers'] = Driver.objects.annotate(newest_trip=Max('trip__departure_time')) \
+		.filter(newest_trip__gte=datetime.datetime.date(datetime.datetime.now()) - datetime.timedelta(days=30))
+
+	for veh in context['lastmonth_vehicles']:
+		try:
+			lm_trips = Trip.objects.filter(vehicle=veh,departure_time__gte=datetime.datetime.date(datetime.datetime.now()) - datetime.timedelta(days=30))\
+				.annotate(distance=F('arrival_mileage')-F('departure_mileage')).order_by('-arrival_time')
+			veh.month_distance = lm_trips.aggregate(a=Sum('distance'))['a']
+			veh.last_trip = lm_trips[0]
+		except:
+			pass
+
+	for dri in context['lastmonth_drivers']:
+		try:
+			lm_trips = Trip.objects.filter(driver=dri,departure_time__gte=datetime.datetime.date(datetime.datetime.now()) - datetime.timedelta(days=30))\
+				.annotate(distance=F('arrival_mileage')-F('departure_mileage')).order_by('-arrival_time')
+			dri.month_distance = lm_trips.aggregate(a=Sum('distance'))['a']
+			dri.last_trip = lm_trips[0]
+		except:
+			pass
+
+	context['lastmonth_numdrivers'] = len(context['lastmonth_drivers'])
+	context['lastmonth_distance'] = last_month \
+		.annotate(distance=F('arrival_mileage')-F('departure_mileage')) \
+		.aggregate(total_distance=Sum('distance'))['total_distance']
+
+	context['lastmonth_numvehicles'] = len(context['lastmonth_vehicles'])
+
+	template = loader.get_template('autologbackend/index.html')
+	
 
 	return HttpResponse(template.render(context,request))
 

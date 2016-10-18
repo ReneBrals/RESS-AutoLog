@@ -12,7 +12,6 @@ urlpatterns = [
     url(r'^submit_register_driver/$', views.submit_register_driver, name='submit_register_driver'),
     url(r'^register_vehicle/$', views.register_vehicle, name='register_vehicle'),
     url(r'^submit_register_vehicle/$', views.submit_register_vehicle, name='submit_register_vehicle'),
-    #url(r'^trips/$', views.trips, name='trips'),
     url(r'^trips/$', views.trips, name='trips'),
     url(r'^trips/delete_trip/(?P<trip_id>[0-9]+)/$', views.delete_trip, name='delete_trip'),
     url(r'^trips/edit_trip/(?P<trip_id>[0-9]+)/$', views.log_trip, name='edit_trip'),
