@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from django.conf import settings
+from django.conf.urls.static import static
 
 from . import views
 
@@ -27,4 +29,4 @@ urlpatterns = [
     url(r'^mobile_log/$', views.mobile_log, name='mobile_log'),
     url(r'^start_log/$', views.start_log, name='start_log'),
     url(r'^geolocation/(?P<lat>\d+\.\d+)/(?P<lon>\d+\.\d+)/$', views.get_location_by_latlong, name='geolocation'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
