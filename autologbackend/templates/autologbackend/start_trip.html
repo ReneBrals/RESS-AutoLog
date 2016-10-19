@@ -14,78 +14,105 @@
     <title>AutoLog</title>
 
     <!-- BOOTSTRAP -->
-  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
-  <!-- Latest compiled and minified CSS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
-  <!-- Optional theme -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
 
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>   
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.5/validator.min.js"></script> 
   <!-- END BOOTSTRAP -->
 
 
   <script>
-        var hasArrived = false;
-        $(document).ready( function() {
-            $("#arrival").hide()
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(fillPosition);
-            } else {
+    var hasArrived = false;
+    $(document).ready( function() {
+        $("#arrival").hide()
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(fillPosition);
+        } else {
                 //not defined
-            }
-            var date = new Date();
-            console.log(getDate(date));
-            $("#depart_date").val(getDate(date));
-            console.log(getTime(date))
-            $("#depart_time").val(getTime(date));
+        }
+            //var date = new Date();
+            //console.log(getDate(date));
+            //$("#depart_date").val(getDate(date));
+            //console.log(getTime(date))
+            //$("#depart_time").val(getTime(date));
+            $("#dep_datetimefield").val(moment().format("YYYY-MM-DD HH:mm"));
+            $("#departure_datetime").datetimepicker({
+                useCurrent: 'minute',
+                format: "YYYY-MM-DD HH:mm",
+            });
+            $("#arrival_datetime").datetimepicker({
+                useCurrent: 'minute',
+                format: "YYYY-MM-DD HH:mm",
+            });
         });
 
-        function getDate (date) {
-                var local = new Date(date);
-                local.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-                return local.toJSON().slice(0, 10);
-            }
+    function getDate (date) {
+        var local = new Date(date);
+        local.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        return local.toJSON().slice(0, 10);
+    }
 
-            function getTime (date) {
-                var local = new Date(date);
-                local.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-                return local.toJSON().slice(11, 16)
+    function getTime (date) {
+        var local = new Date(date);
+        local.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+        return local.toJSON().slice(11, 16)
+    }
+
+    function arrived() {
+        hasArrived = true;
+        var date = new Date();
+        $("#arr_datetimefield").val(moment().format("YYYY-MM-DD HH:mm"));
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(fillPosition);
         }
+        $("#arrived_button").hide();
+        $("#arrival").show();
 
-        function arrived() {
-            hasArrived = true;
-            var date = new Date();
-            $("#arrive_date").val(getDate(date));
-            $("#arrive_time").val(getTime(date));
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(fillPosition);
+    }
+
+    function fillDeparturePosition(position){
+        $.ajax({
+            url: "../geolocation/" + position.coords.latitude + "/" + position.coords.longitude + "/", success: function(result) {
+                $("#depart_location").val(result['address']);
             }
-            $("#arrived_button").hide();
-            $("#arrival").show();
+        });
+    }
 
-        }
+    function fillArrivalPosition(position){
+        $.ajax({
+            url: "../geolocation/" + position.coords.latitude + "/" + position.coords.longitude + "/", success: function(result) {
+                    $("#arrive_location").val(result['address']);
+            }
+        });
+    }
 
-        function fillPosition(position) {
-            $.ajax({
-                url: "../geolocation/" + position.coords.latitude + "/" + position.coords.longitude + "/", success: function(result) {
-                    console.log(result);
-                    if (hasArrived) {
-                        if ($("#arrive_location").val() == "")
-                            $("#arrive_location").val(result['address']);
-                    } else {
-                        if ($("#depart_location").val() == "")
-                            $("#depart_location").val(result['address']);
-                    }
+    function fillPosition(position) {
+        $.ajax({
+            url: "../geolocation/" + position.coords.latitude + "/" + position.coords.longitude + "/", success: function(result) {
+                console.log(result);
+                if (hasArrived) {
+                    if ($("#arrive_location").val() == "")
+                        $("#arrive_location").val(result['address']);
+                } else {
+                    if ($("#depart_location").val() == "")
+                        $("#depart_location").val(result['address']);
                 }
-            });
-            console.log(position.coords.latitude);
-            console.log(position.coords.longitude);
-        }
-  </script>
+            }
+        });
+        console.log(position.coords.latitude);
+        console.log(position.coords.longitude);
+    }
+</script>
 
     <!-- Custom styles for this template -->
+    <!--<link href="{% static "autologbackend/css/cover.css" %}" rel="stylesheet">-->
     <link href="{% static "autologbackend/css/cover.css" %}" rel="stylesheet">
   </head>
 
@@ -94,25 +121,12 @@
     <div class="site-wrapper">
       <div class="site-wrapper-inner">
         <div class="cover-container">
-          <div class="masthead clearfix">
-              <!--
-            <div class="inner">
-              <h3 class="masthead-brand">AutoLog</h3>
-              <nav>
-                <ul class="nav masthead-nav">
-                  <li class="active"><a href="#">Log</a></li>
-                </ul>
-              </nav>
-            </div>
-              -->
-          </div>
-
           <div class="inner cover">
-            <h1 class="cover-heading">Log a trip.</h1>
-            <form action="{% url 'submit_log_trip' %}" method="post">
+            <h1 class="cover-heading"><span class="glyphicon glyphicon-road" aria-hidden="true"></span> AutoLog: Log a trip.</h1>
+            <form action="{% url 'submit_log_trip' %}" method="post" data-toggle="validator">
             <input type="hidden" name="m" value="m" />
     {% csrf_token %}
-    <div class="form-group">
+    <div class="form-group" >
         <label for="vehicle">Vehicle</label>
         <select class="form-control" name="vehicle">
         {% for veh in vehicles %}
@@ -129,53 +143,77 @@
         {% endfor %}
         </select>
     </div>
-
-    <br />
-    <h4><b>Location and time<b></h4>
+    <h4><b>Departure<b></h4>
     <hr>
     <div class="row">
     <div class="col-lg-6">
-    <div class="form-group">
+    <div class="form-group has-feedback">
         <label for="departure_location">Departure location</label>
-        <input id="depart_location" class="form-control" type="text" name="departure_location">
+        <div class="input-group">
+            <input id="depart_location" class="form-control" type="text" name="departure_location" required>
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" onclick="navigator.geolocation.getCurrentPosition(fillDeparturePosition);">
+                    Get Location <span class="glyphicon glyphicon-globe"></span>
+                </button>
+            </span>
+        </div>
+        <div class="help-block with-errors"></div>
     </div>
     </div>
     <div class="col-lg-6">
-    <div class="form-group">
+    <div class="form-group has-feedback">
         <label for="departure_date">Departure time</label>
-        <input id="depart_date" class="form-control" type="date" name ="departure_date">
-        <input id="depart_time" class="form-control" type="time" name ="departure_time">
+        <div class='input-group date' id='departure_datetime'>
+            <input type='text' class="form-control" name="departure_datetime" id="dep_datetimefield" required>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+            </span>
+        </div>
+        <div class="help-block with-errors"></div>
     </div>
     </div>
     </div>
     <div class="row">
     <div class="col-lg-6">
-    <div class="form-group">
-        <label for="departure_milage">Departure milage</label>
-        <input class="form-control" type="number" name="departure_mileage">
+    <div class="form-group has-feedback">
+        <label for="departure_milage">Departure mileage</label>
+        <input class="form-control" type="number" name="departure_mileage" min="0" required>
     </div>
     </div>
     </div>
-    <br />
+    <h4><b>Arrival<b></h4>
     <hr />
     <div id="arrival">
     <div class="col-lg-6">
-    <div class="form-group">
+    <div class="form-group has-feedback">
         <label for="arrival_location">Arrival location</label>
-        <input id="arrive_location" class="form-control" type="text" name="arrival_location">
+        <div class="input-group">
+            <input id="arrive_location" class="form-control" type="text" name="arrival_location" required>
+            <span class="input-group-btn">
+                <button class="btn btn-primary" type="button" onclick="navigator.geolocation.getCurrentPosition(fillArrivalPosition);">
+                    Get Location <span class="glyphicon glyphicon-globe"></span>
+                </button>
+            </span>
+        </div>
+        <div class="help-block with-errors"></div>
     </div>
     </div>
     <div class="col-lg-6">
-    <div class="form-group">
-        <label for="arrival_date">Arrival time</label>
-        <input id="arrive_date" class="form-control" type="date" name ="arrival_date">
-        <input id="arrive_time" class="form-control" type="time" name ="arrival_time">
+    <div class="form-group has-feedback">
+        <label for="departure_date">Arrival time</label>
+        <div class='input-group date' id='arrival_datetime'>
+            <input type='text' class="form-control" name="arrival_datetime" id="arr_datetimefield" required>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-time"></span>
+            </span>
+        </div>
+        <div class="help-block with-errors"></div>
     </div>
     </div>
     <div class="col-lg-6">
-    <div class="form-group">
-        <label for="arrival_milage">Arrival milage</label>
-        <input class="form-control" type="number" name="arrival_mileage">
+    <div class="form-group has-feedback">
+        <label for="arrival_milage">Arrival mileage</label>
+        <input class="form-control" type="number" name="arrival_mileage" min="0" required>
     </div>
     </div>
     <input id="log" class="form-control btn-primary" type="submit" value="Submit" />
